@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>화성암 탐험대</title>
+  
+  <!-- Tailwind CSS 불러오기 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React 및 ReactDOM 불러오기 -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel (JSX 문법을 브라우저가 읽을 수 있게 변환) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- 웹 폰트 적용 -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+    body { font-family: 'Jua', sans-serif; letter-spacing: 0.5px; }
+    /* 프린트용 스타일 */
+    @media print {
+      body * { visibility: hidden; }
+      .print-card, .print-card * { visibility: visible; }
+      .print-card {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        max-width: 450px;
+        box-shadow: none !important;
+        margin: 0;
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-amber-50 text-slate-800">
+  <!-- React 앱이 렌더링될 공간 -->
+  <div id="root"></div>
+
+  <!-- React 코드 시작 -->
+  <script type="text/babel">
+    const { useState, useRef, useEffect, useCallback } = React;
+
+    function App() {
+      const [activeTab, setActiveTab] = useState('story');
+      const [showInfo, setShowInfo] = useState(false);
+
+      return (
+        <div className="flex flex-col">
+          {/* Header */}
+          <header className="bg-orange-500 text-white p-4 shadow-md flex justify-between items-center relative z-10">
+            <h1 className="text-2xl md:text-3xl flex items-center gap-2 drop-shadow-md">
+              🌋 두근두근 화성암 탐험대
+            </h1>
+            <button 
+              onClick={() => setShowInfo(true)}
+              className="p-2 bg-orange-400 hover:bg-orange-300 rounded-full transition-colors flex items-center justify-center"
+              title="이게 뭔가요?"
+            >
+              <span className="text-2xl">❓</span>
+            </button>
+          </header>
+
+          {/* Info Modal */}
+          {showInfo && (
+            <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full relative border-4 border-orange-400">
+                <button 
+                  onClick={() => setShowInfo(false)}
+                  className="absolute top-4 right-4 text-orange-400 hover:text-orange-600"
+                >
+                  <span className="text-3xl">❌</span>
+                </button>
+                <h2 className="text-3xl mb-4 text-orange-600 drop-shadow-sm">안녕! 여긴 어떤 곳이냐면~</h2>
+                <p className="mb-3 text-lg text-slate-700 leading-relaxed">
+                  <strong>'화성암 탐험대'</strong>는 아주아주 뜨거운 마그마가 식어서 만들어지는 돌(화성암)의 비밀을 파헤치는 곳이야!
+                </p>
+                <ul className="list-disc pl-5 mb-6 text-lg text-slate-600 space-y-2">
+                  <li><strong>스토리 탐험:</strong> 네가 직접 마그마가 되어서 이리저리 움직이며 어떤 암석이 될지 정해봐!</li>
+                  <li><strong>암석 퍼즐:</strong> 알갱이 크기랑 색깔에 맞춰서 암석들을 제자리에 쏙쏙 넣어주자!</li>
+                  <li><strong>내 광물 찰칵:</strong> 직접 찾은 돌 사진을 찍어서 멋진 카드를 만들어 볼 수 있어!</li>
+                </ul>
+                <button 
+                  onClick={() => setShowInfo(false)}
+                  className="w-full bg-orange-500 text-white text-xl py-3 rounded-2xl hover:bg-orange-600 transition-transform active:scale-95 shadow-md"
+                >
+                  탐험 시작하기! 🚀
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Navigation */}
+          <nav className="bg-white shadow-md flex overflow-x-auto text-lg">
+            <button 
+              onClick={() => setActiveTab('story')}
+              className={`flex-1 py-4 px-4 text-center whitespace-nowrap border-b-4 transition-colors flex items-center justify-center gap-2 ${activeTab === 'story' ? 'border-orange-500 text-orange-600 bg-orange-50' : 'border-transparent text-slate-500 hover:bg-slate-50'}`}
+            >
+              <span>📖</span> 스토리 탐험
+            </button>
+            <button 
+              onClick={() => setActiveTab('classify')}
+              className={`flex-1 py-4 px-4 text-center whitespace-nowrap border-b-4 transition-colors flex items-center justify-center gap-2 ${activeTab === 'classify' ? 'border-orange-500 text-orange-600 bg-orange-50' : 'border-transparent text-slate-500 hover:bg-slate-50'}`}
+            >
+              <span>🧩</span> 암석 퍼즐
+            </button>
+            <button 
+              onClick={() => setActiveTab('card')}
+              className={`flex-1 py-4 px-4 text-center whitespace-nowrap border-b-4 transition-colors flex items-center justify-center gap-2 ${activeTab === 'card' ? 'border-orange-500 text-orange-600 bg-orange-50' : 'border-transparent text-slate-500 hover:bg-slate-50'}`}
+            >
+              <span>📸</span> 내 광물 찰칵
+            </button>
+          </nav>
+
+          {/* Main Content Area */}
+          <main className="flex-1 p-4 md:p-6 max-w-5xl w-full mx-auto">
+            {activeTab === 'story' && <StoryGame />}
+            {activeTab === 'classify' && <Classification />}
+            {activeTab === 'card' && <CardMaker />}
+          </main>
+
+          {/* Footer */}
+          <footer className="bg-slate-800 text-slate-300 p-6 text-center text-sm md:text-base border-t-4 border-slate-700">
+            <div className="max-w-2xl mx-auto space-y-2">
+              <p className="text-orange-300 text-lg">제작 : 조승재 (과학이조선생)</p>
+              <p>학교 등 교육기관에서 교육 목적으로 마음껏! 자유롭게 사용해 주세요! 😊</p>
+              <p>문의 : <a href="mailto:chuseonjae@outlook.kr" className="text-orange-400 hover:underline">chuseonjae@outlook.kr</a></p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    // --- Interactive Story Game Component ---
+    function StoryGame() {
+      const [phase, setPhase] = useState('intro');
+      const [missionIndex, setMissionIndex] = useState(0);
+      const [pos, setPos] = useState({ x: 3, y: 3 });
+      const [cooling, setCooling] = useState('');
+      const [minerals, setMinerals] = useState([]);
+      const [inventory, setInventory] = useState([]);
+
+      const GRID_SIZE = 7;
+
+      const MISSIONS = [
+        { id: '현무암', title: '미션 1: 현무암 만들기!', hint: '현무암은 결정이 작고 어두운 암석이야.' },
+        { id: '유문암', title: '미션 2: 유문암 만들기!', hint: '유문암은 결정이 작고 밝은 암석이야.' },
+        { id: '반려암', title: '미션 3: 반려암 만들기!', hint: '반려암은 결정이 크고 어두운 암석이야.' },
+        { id: '화강암', title: '미션 4: 화강암 만들기!', hint: '화강암은 결정이 크고 밝은 암석이야.' }
+      ];
+
+      const currentMission = MISSIONS[missionIndex];
+
+      const startMineralPhase = (coolingType) => {
+        setCooling(coolingType);
+        setPhase('mineral');
+        const startY = coolingType === 'fast' ? 2 : 5;
+        setPos({ x: 3, y: startY });
+        setInventory([]);
+        
+        const newMinerals = [];
+        let darkCount = 0;
+        let lightCount = 0;
+        const minRy = coolingType === 'fast' ? 1 : 4;
+        const maxRy = coolingType === 'fast' ? 3 : 6;
+
+        while(newMinerals.length < 10) {
+          const rx = Math.floor(Math.random() * GRID_SIZE);
+          const ry = Math.floor(Math.random() * (maxRy - minRy + 1)) + minRy;
+          
+          if (rx === 3 && ry === startY) continue;
+          if (!newMinerals.find(m => m.x === rx && m.y === ry)) {
+            let type;
+            if (darkCount >= 5) type = 'light';
+            else if (lightCount >= 5) type = 'dark';
+            else type = Math.random() > 0.5 ? 'dark' : 'light';
+
+            if (type === 'dark') darkCount++;
+            else lightCount++;
+
+            newMinerals.push({ x: rx, y: ry, type });
+          }
+        }
+        setMinerals(newMinerals);
+      };
+
+      const move = useCallback((dx, dy) => {
+        if (phase !== 'location' && phase !== 'mineral') return;
+        
+        setPos(prev => {
+          let minX = 0; let maxX = GRID_SIZE - 1;
+          let minY = 0; let maxY = GRID_SIZE - 1;
+
+          if (phase === 'mineral') {
+            if (cooling === 'fast') { minY = 1; maxY = 3; } 
+            else if (cooling === 'slow') { minY = 4; maxY = 6; }
+          }
+
+          const newX = Math.max(minX, Math.min(maxX, prev.x + dx));
+          const newY = Math.max(minY, Math.min(maxY, prev.y + dy));
+          return { x: newX, y: newY };
+        });
+      }, [phase, cooling]);
+
+      const action = useCallback(() => {
+        if (phase === 'mineral') {
+          const mineralIndex = minerals.findIndex(m => m.x === pos.x && m.y === pos.y);
+          if (mineralIndex > -1) {
+            const picked = minerals[mineralIndex];
+            setInventory(prev => [...prev, picked.type]);
+            setMinerals(prev => prev.filter((_, idx) => idx !== mineralIndex));
+          }
+        }
+      }, [phase, minerals, pos]);
+
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+            e.preventDefault();
+          }
+          switch(e.key) {
+            case 'ArrowUp': move(0, -1); break;
+            case 'ArrowDown': move(0, 1); break;
+            case 'ArrowLeft': move(-1, 0); break;
+            case 'ArrowRight': move(1, 0); break;
+            case ' ': action(); break;
+            default: break;
+          }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+      }, [move, action]);
+
+      useEffect(() => {
+        if (phase === 'location') {
+          if (pos.y === 0) startMineralPhase('fast');
+          else if (pos.y === GRID_SIZE - 1) startMineralPhase('slow');
+        }
+      }, [pos, phase]);
+
+      useEffect(() => {
+        if (phase === 'mineral' && inventory.length >= 3) setPhase('result');
+      }, [inventory, phase]);
+
+      const startMission = () => {
+        setPhase('location'); setPos({ x: 3, y: 3 });
+        setCooling(''); setInventory([]); setMinerals([]);
+      };
+
+      const nextMission = () => {
+        setMissionIndex(prev => prev + 1);
+        startMission();
+      };
+
+      const resetAllMissions = () => {
+        setMissionIndex(0); setPhase('intro');
+      };
+
+      const getResult = () => {
+        const darkCount = inventory.filter(i => i === 'dark').length;
+        const colorType = darkCount > 1 ? 'dark' : 'light';
+        
+        if (cooling === 'fast' && colorType === 'dark') return { id: '현무암', name: '현무암', title: '구멍 뽕뽕 어두운 현무암', desc: '앗 뜨거! 지표면에서 후다닥 빨리 식어서 알갱이(결정)가 아주 작아! 어두운색 광물을 많이 먹어서 까만색이 되었지! 화산암 친구야!', img: '🌑' };
+        if (cooling === 'fast' && colorType === 'light') return { id: '유문암', name: '유문암', title: '밝고 매끈한 유문암', desc: '슈웅~ 지표면에서 빨리 식어서 알갱이가 작아! 하지만 밝은색 광물을 많이 꿀꺽해서 색깔이 밝단다! 나도 화산암 친구!', img: '🤍' };
+        if (cooling === 'slow' && colorType === 'dark') return { id: '반려암', name: '반려암', title: '알갱이가 큼직한 반려암', desc: '쿨쿨.. 지하 깊은 곳에서 아주 천천히 식었어. 그래서 알갱이(결정)가 큼직큼직해! 어두운색 광물이 많아서 까맣지! 나는 심성암이야!', img: '⬛' };
+        if (cooling === 'slow' && colorType === 'light') return { id: '화강암', name: '화강암', title: '반짝반짝 예쁜 화강암', desc: '지하 깊은 곳에서 느~릿느릿 식어서 알갱이가 아주 커! 밝은색 광물을 많이 먹어서 전체적으로 밝고 예쁜 무늬가 생겼어. 튼튼한 심성암이야!', img: '✨' };
+        return null;
+      };
+
+      const madeRock = phase === 'result' ? getResult() : null;
+      const isSuccess = madeRock && madeRock.id === currentMission.id;
+
+      return (
+        <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl p-6 md:p-10 border-4 border-orange-200 text-center">
+          {phase === 'intro' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="text-7xl animate-bounce">🌋</div>
+              <h2 className="text-4xl text-red-600 drop-shadow-sm">마그마의 화성암 미션!</h2>
+              <p className="text-xl text-slate-700">
+                총 4가지의 암석을 순서대로 만들어보는 미션이야!<br/>
+                주어진 힌트를 보고 알맞은 곳으로 이동해서<br/>
+                <strong className="text-orange-500">알맞은 광물</strong>을 먹어보자!
+              </p>
+              <div className="bg-orange-50 p-4 rounded-xl text-lg text-slate-600 border border-orange-200">
+                🎮 <strong>조작법:</strong> 키보드 방향키(이동)와 스페이스바(줍기)<br/>
+                <span className="text-orange-500 font-bold">(터치도 가능해! 내 캐릭터를 터치하면 광물을 주워!)</span>
+              </div>
+              <button 
+                onClick={() => { setMissionIndex(0); startMission(); }}
+                className="bg-red-500 text-white px-8 py-4 rounded-full text-2xl shadow-lg hover:bg-red-600 transition-transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 mx-auto"
+              >
+                <span>⭐</span> 미션 출발~!! 🔥
+              </button>
+            </div>
+          )}
+
+          {(phase === 'location' || phase === 'mineral') && (
+            <div className="space-y-4 animate-fade-in">
+              <div className="bg-amber-100 border-2 border-amber-400 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-amber-400 text-white px-3 py-1 rounded-bl-xl font-bold">
+                  {missionIndex + 1} / {MISSIONS.length}
+                </div>
+                <h3 className="text-2xl font-bold text-amber-900 mb-1">{currentMission.title}</h3>
+                <p className="text-amber-800 text-lg">💡 힌트: {currentMission.hint}</p>
+              </div>
+
+              <h2 className="text-xl text-orange-600 drop-shadow-sm h-12 flex items-center justify-center">
+                {phase === 'location' ? "방향키로 움직여서 어디서 식을지 정해봐!" : "광물을 터치하거나 스페이스바를 눌러! (3개 모으기)"}
+              </h2>
+
+              {phase === 'mineral' && (
+                <div className="flex justify-center gap-6 mb-3 bg-slate-100 w-max mx-auto px-5 py-2 rounded-full shadow-sm border border-slate-200">
+                  <span className="font-bold text-slate-700">🖤 어두운 광물</span>
+                  <span className="font-bold text-slate-700">🤍 밝은 광물</span>
+                </div>
+              )}
+              
+              <div className="relative inline-block border-8 border-slate-800 rounded-3xl bg-gradient-to-b from-sky-300 via-orange-400 to-red-800 overflow-hidden shadow-2xl">
+                <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140%] h-[70%] bg-stone-700 rounded-t-[100%] shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]"></div>
+                  <div className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-[50%] h-[50%] bg-red-600 rounded-full blur-2xl animate-pulse"></div>
+                  <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[15%] h-[80%] bg-gradient-to-t from-red-500 to-orange-400 blur-md"></div>
+                </div>
+
+                {phase === 'location' && (
+                  <>
+                    <div className="absolute top-2 left-0 right-0 flex justify-center z-30 pointer-events-none">
+                      <span className="text-sky-900 font-extrabold text-sm sm:text-base tracking-wide bg-white/95 px-5 py-2 rounded-full shadow-lg border-2 border-sky-400 animate-pulse">
+                        ⬆️ 지표면 (화산 밖! 빨리 식어요 💨)
+                      </span>
+                    </div>
+                    <div className="absolute bottom-2 left-0 right-0 flex justify-center z-30 pointer-events-none">
+                      <span className="text-red-900 font-extrabold text-sm sm:text-base tracking-wide bg-white/95 px-5 py-2 rounded-full shadow-lg border-2 border-red-500 animate-pulse">
+                        ⬇️ 지하 깊은 곳 (마그마 방! 천천히 식어요 🐢)
+                      </span>
+                    </div>
+                  </>
+                )}
+
+                <div className="grid grid-cols-7 gap-1 p-3 relative z-20">
+                  {Array.from({ length: GRID_SIZE * GRID_SIZE }).map((_, i) => {
+                    const x = i % GRID_SIZE;
+                    const y = Math.floor(i / GRID_SIZE);
+                    const isPlayer = pos.x === x && pos.y === y;
+                    const mineral = phase === 'mineral' ? minerals.find(m => m.x === x && m.y === y) : null;
+                    const isClickable = isPlayer && phase === 'mineral' && mineral;
+
+                    return (
+                      <div 
+                        key={i} 
+                        onClick={() => { if (isClickable) action(); }}
+                        className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-3xl sm:text-4xl transition-all
+                          ${isClickable ? 'cursor-pointer active:scale-90 bg-white/50 rounded-full ring-4 ring-orange-500 shadow-lg z-30' : 'bg-transparent'}
+                        `}
+                      >
+                        {isPlayer && <span className="animate-bounce filter drop-shadow-lg z-20">🔥</span>}
+                        {!isPlayer && mineral && (
+                          <span className="filter drop-shadow-md z-10">{mineral.type === 'dark' ? '🖤' : '🤍'}</span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center gap-4 mt-2">
+                {phase === 'mineral' && (
+                  <div className="flex gap-2 items-center bg-white px-4 py-2 rounded-full border-2 border-slate-200 shadow-sm">
+                    <span className="text-lg text-slate-600">주운 광물:</span>
+                    <div className="flex gap-1">
+                      {inventory.map((m, idx) => (
+                        <span key={idx} className="text-2xl">{m === 'dark' ? '🖤' : '🤍'}</span>
+                      ))}
+                      {Array.from({length: 3 - inventory.length}).map((_, idx) => (
+                        <span key={idx+3} className="text-2xl opacity-20">❓</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-3 gap-2 w-48 sm:hidden">
+                  <div />
+                  <button onClick={() => move(0, -1)} className="bg-slate-200 p-3 rounded-xl active:bg-slate-300 flex justify-center">⬆️</button>
+                  <div />
+                  <button onClick={() => move(-1, 0)} className="bg-slate-200 p-3 rounded-xl active:bg-slate-300 flex justify-center">⬅️</button>
+                  <button onClick={action} className={`text-white font-bold p-3 rounded-xl shadow-md ${phase === 'mineral' ? 'bg-orange-500 active:bg-orange-600 animate-pulse' : 'bg-orange-300'}`}>
+                    {phase === 'mineral' ? '줍기!' : '이동'}
+                  </button>
+                  <button onClick={() => move(1, 0)} className="bg-slate-200 p-3 rounded-xl active:bg-slate-300 flex justify-center">➡️</button>
+                  <div />
+                  <button onClick={() => move(0, 1)} className="bg-slate-200 p-3 rounded-xl active:bg-slate-300 flex justify-center">⬇️</button>
+                  <div />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {phase === 'result' && madeRock && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="text-8xl mb-4 animate-bounce drop-shadow-lg">{madeRock.img}</div>
+              <h2 className="text-4xl text-indigo-600 drop-shadow-sm">
+                나는 <span className="text-red-500 text-5xl">'{madeRock.name}'</span>(이)가 되었어!
+              </h2>
+              <div className="bg-indigo-50 p-4 rounded-2xl text-left border-2 border-indigo-200 shadow-inner">
+                <p className="text-lg text-slate-800 leading-relaxed">
+                  {madeRock.desc}
+                </p>
+              </div>
+
+              {isSuccess ? (
+                <div className="bg-green-100 p-6 rounded-2xl border-4 border-green-400 mt-6 shadow-md animate-fade-in">
+                  <h3 className="text-3xl text-green-700 mb-2 font-bold">🎉 미션 성공! 🎉</h3>
+                  <p className="text-xl text-green-800 mb-4">정확하게 '{currentMission.id}'을(를) 만들었어!</p>
+                  {missionIndex < MISSIONS.length - 1 ? (
+                    <button 
+                      onClick={nextMission}
+                      className="bg-green-500 text-white px-8 py-3 rounded-full text-xl shadow-lg hover:bg-green-600 transition-transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 mx-auto"
+                    >
+                      다음 미션으로 🚀
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={() => setPhase('all_clear')}
+                      className="bg-yellow-500 text-white px-8 py-3 rounded-full text-xl shadow-lg hover:bg-yellow-600 transition-transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 mx-auto"
+                    >
+                      <span>🏆</span> 결과 보기
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="bg-red-50 p-6 rounded-2xl border-4 border-red-300 mt-6 shadow-md animate-fade-in">
+                  <h3 className="text-3xl text-red-600 mb-2 font-bold">😅 앗, 미션 실패!</h3>
+                  <p className="text-xl text-red-800 mb-2">
+                    '{currentMission.id}'을(를) 만들어야 하는데 '{madeRock.name}'이(가) 되어버렸어!
+                  </p>
+                  <p className="text-lg text-red-600 mb-6 bg-red-100 p-2 rounded-lg">
+                    💡 다시 힌트: {currentMission.hint}
+                  </p>
+                  <button 
+                    onClick={startMission}
+                    className="bg-red-400 text-white px-8 py-3 rounded-full text-xl shadow-lg hover:bg-red-500 transition-transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 mx-auto"
+                  >
+                    <span>🔄</span> 다시 도전하기!
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {phase === 'all_clear' && (
+            <div className="space-y-6 animate-fade-in py-8">
+              <div className="text-9xl mb-4 animate-bounce">🏆</div>
+              <h2 className="text-5xl text-yellow-500 drop-shadow-md font-bold">우와! 올 클리어!</h2>
+              <p className="text-2xl text-slate-700 leading-relaxed">
+                4가지 화성암을 모두 멋지게 만들어냈어!<br/>
+                이제 너는 진정한 <strong className="text-orange-600 text-3xl">화성암 마스터</strong>야!
+              </p>
+              <button 
+                onClick={resetAllMissions}
+                className="mt-8 flex items-center justify-center gap-2 mx-auto bg-orange-500 text-white px-8 py-4 rounded-full text-2xl shadow-lg hover:bg-orange-600 transition-transform hover:scale-105 active:scale-95"
+              >
+                <span>🔄</span> 처음부터 다시 하기
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // --- Classification (Drag and Drop) Component ---
+    function Classification() {
+      const initialRocks = [
+        { id: '현무암', name: '현무암' },
+        { id: '유문암', name: '유문암' },
+        { id: '반려암', name: '반려암' },
+        { id: '화강암', name: '화강암' }
+      ];
+
+      const initialBoard = { 'fast-dark': null, 'fast-light': null, 'slow-dark': null, 'slow-light': null };
+      const correctAnswers = { 'fast-dark': '현무암', 'fast-light': '유문암', 'slow-dark': '반려암', 'slow-light': '화강암' };
+
+      const [availableRocks, setAvailableRocks] = useState(initialRocks);
+      const [board, setBoard] = useState(initialBoard);
+      const [selectedRock, setSelectedRock] = useState(null); 
+      const [isChecked, setIsChecked] = useState(false);
+
+      const handleDragStart = (e, rock) => {
+        e.dataTransfer.setData('rockId', rock.id);
+        setSelectedRock(rock);
+      };
+
+      const handleDragOver = (e) => { e.preventDefault(); };
+
+      const handleDrop = (e, cellId) => {
+        e.preventDefault();
+        const rockId = e.dataTransfer.getData('rockId');
+        const rock = availableRocks.find(r => r.id === rockId) || Object.values(board).find(r => r && r.id === rockId);
+        
+        if (rock) placeRockInCell(rock, cellId);
+        setSelectedRock(null);
+      };
+
+      const handleRockClick = (rock) => {
+        if (isChecked) return;
+        setSelectedRock(selectedRock?.id === rock.id ? null : rock);
+      };
+
+      const handleCellClick = (cellId) => {
+        if (isChecked) return;
+        
+        if (selectedRock) {
+          placeRockInCell(selectedRock, cellId);
+          setSelectedRock(null);
+        } else if (board[cellId]) {
+          const rockToReturn = board[cellId];
+          setBoard(prev => ({ ...prev, [cellId]: null }));
+          setAvailableRocks(prev => [...prev, rockToReturn]);
+        }
+      };
+
+      const placeRockInCell = (rock, cellId) => {
+        const existingRock = board[cellId];
+        setAvailableRocks(prev => prev.filter(r => r.id !== rock.id));
+        setBoard(prev => {
+          const newBoard = { ...prev };
+          Object.keys(newBoard).forEach(key => {
+            if (newBoard[key]?.id === rock.id) newBoard[key] = null;
+          });
+          newBoard[cellId] = rock;
+          return newBoard;
+        });
+
+        if (existingRock) {
+          setAvailableRocks(prev => [...prev, existingRock]);
+        }
+      };
+
+      const checkAnswers = () => setIsChecked(true);
+
+      const resetActivity = () => {
+        setAvailableRocks(initialRocks);
+        setBoard(initialBoard);
+        setIsChecked(false);
+        setSelectedRock(null);
+      };
+
+      return (
+        <div className="max-w-4xl mx-auto space-y-6">
+          <div className="bg-white p-6 md:p-8 rounded-3xl shadow-lg border-4 border-orange-200">
+            <h2 className="text-3xl mb-2 flex items-center gap-2 text-orange-600 drop-shadow-sm">
+              <span>🧩</span> 돌멩이 제자리 찾기!
+            </h2>
+            <p className="text-xl text-slate-600 mb-6">
+              아래에 있는 암석들을 끌어다 놓거나(드래그 앤 드롭), 콕! 누른 다음 빈칸을 콕! 눌러서 알맞은 집에 넣어주자!
+            </p>
+
+            <div className="flex flex-wrap gap-4 mb-8 min-h-[80px] p-4 bg-orange-50 rounded-2xl border-4 border-dashed border-orange-300">
+              {availableRocks.length === 0 && <span className="text-orange-400 m-auto text-xl">우와! 다 넣었다! 정답을 확인해볼까?</span>}
+              {availableRocks.map(rock => (
+                <div
+                  key={rock.id}
+                  draggable={!isChecked}
+                  onDragStart={(e) => handleDragStart(e, rock)}
+                  onClick={() => handleRockClick(rock)}
+                  className={`px-8 py-4 bg-white border-4 rounded-2xl text-2xl shadow-sm cursor-grab active:cursor-grabbing transition-all
+                    ${selectedRock?.id === rock.id ? 'border-red-400 ring-4 ring-red-100 scale-110 -rotate-3' : 'border-slate-300 hover:border-orange-400 hover:scale-105'}
+                    ${isChecked ? 'opacity-50 cursor-not-allowed' : ''}
+                  `}
+                >
+                  {rock.name}
+                </div>
+              ))}
+            </div>
+
+            <div className="overflow-x-auto rounded-xl shadow-inner border-2 border-slate-100">
+              <table className="w-full min-w-[500px] border-collapse text-center text-lg">
+                <thead>
+                  <tr>
+                    <th className="p-4 border-4 border-slate-200 bg-slate-100 text-xl">어디서 식었니?</th>
+                    <th className="p-4 border-4 border-slate-200 bg-slate-50 text-xl text-slate-700">🖤 어두운색 광물이 많아!</th>
+                    <th className="p-4 border-4 border-slate-200 bg-slate-50 text-xl text-slate-700">🤍 밝은색 광물이 많아!</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th className="p-4 border-4 border-slate-200 bg-rose-50 text-left">
+                      <div className="text-2xl text-rose-600 drop-shadow-sm">화산암 🌋</div>
+                      <div className="text-base text-rose-500 font-normal mt-1">지표 부근에서 후다닥! 💨<br/>(알갱이가 아주 작아)</div>
+                    </th>
+                    <td 
+                      className={`p-4 border-4 border-slate-200 relative transition-colors h-24 ${selectedRock ? 'bg-orange-50 cursor-pointer hover:bg-orange-100' : 'bg-white'}`}
+                      onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, 'fast-dark')} onClick={() => handleCellClick('fast-dark')}
+                    >
+                      <CellContent rock={board['fast-dark']} isChecked={isChecked} isCorrect={board['fast-dark']?.id === correctAnswers['fast-dark']} />
+                    </td>
+                    <td 
+                      className={`p-4 border-4 border-slate-200 relative transition-colors h-24 ${selectedRock ? 'bg-orange-50 cursor-pointer hover:bg-orange-100' : 'bg-white'}`}
+                      onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, 'fast-light')} onClick={() => handleCellClick('fast-light')}
+                    >
+                      <CellContent rock={board['fast-light']} isChecked={isChecked} isCorrect={board['fast-light']?.id === correctAnswers['fast-light']} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="p-4 border-4 border-slate-200 bg-indigo-50 text-left">
+                      <div className="text-2xl text-indigo-700 drop-shadow-sm">심성암 ⛰️</div>
+                      <div className="text-base text-indigo-500 font-normal mt-1">지하 깊은 곳에서 쿨쿨~ 🐢<br/>(알갱이가 엄청 커!)</div>
+                    </th>
+                    <td 
+                      className={`p-4 border-4 border-slate-200 relative transition-colors h-24 ${selectedRock ? 'bg-orange-50 cursor-pointer hover:bg-orange-100' : 'bg-white'}`}
+                      onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, 'slow-dark')} onClick={() => handleCellClick('slow-dark')}
+                    >
+                      <CellContent rock={board['slow-dark']} isChecked={isChecked} isCorrect={board['slow-dark']?.id === correctAnswers['slow-dark']} />
+                    </td>
+                    <td 
+                      className={`p-4 border-4 border-slate-200 relative transition-colors h-24 ${selectedRock ? 'bg-orange-50 cursor-pointer hover:bg-orange-100' : 'bg-white'}`}
+                      onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, 'slow-light')} onClick={() => handleCellClick('slow-light')}
+                    >
+                      <CellContent rock={board['slow-light']} isChecked={isChecked} isCorrect={board['slow-light']?.id === correctAnswers['slow-light']} />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mt-8 flex justify-center gap-4">
+              {!isChecked ? (
+                <button 
+                  onClick={checkAnswers}
+                  disabled={availableRocks.length > 0}
+                  className={`px-10 py-4 rounded-full text-2xl shadow-lg transition-transform flex items-center gap-3
+                    ${availableRocks.length === 0 ? 'bg-red-500 text-white hover:bg-red-600 hover:scale-105 active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}
+                  `}
+                >
+                  <span>✅</span> 정답 맞춰보기!
+                </button>
+              ) : (
+                <button 
+                  onClick={resetActivity}
+                  className="px-10 py-4 bg-orange-500 text-white rounded-full text-2xl shadow-lg hover:bg-orange-600 hover:scale-105 active:scale-95 transition-transform flex items-center gap-3"
+                >
+                  <span>🔄</span> 다시 해볼래!
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function CellContent({ rock, isChecked, isCorrect }) {
+      if (!rock) return <div className="text-slate-300 text-lg flex items-center justify-center border-4 border-dashed border-transparent h-full">여기에 쏙!</div>;
+
+      return (
+        <div className={`h-full w-full flex items-center justify-center text-2xl rounded-xl border-4 transition-all
+          ${isChecked 
+            ? (isCorrect ? 'bg-green-100 border-green-500 text-green-700 animate-pulse' : 'bg-red-100 border-red-500 text-red-700 opacity-80')
+            : 'bg-white border-orange-300 text-slate-800 shadow-md scale-105'
+          }`}
+        >
+          {rock.name}
+          {isChecked && isCorrect && <span className="ml-2">✅</span>}
+          {isChecked && !isCorrect && <span className="ml-2">❌</span>}
+        </div>
+      );
+    }
+
+    // --- Card Maker Component ---
+    function CardMaker() {
+      const [imagePreview, setImagePreview] = useState(null);
+      const [cardData, setCardData] = useState({ name: '', color: '', crystalSize: '', features: '', finder: '' });
+      const fileInputRef = useRef(null);
+
+      const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onloadend = () => setImagePreview(reader.result);
+          reader.readAsDataURL(file);
+        }
+      };
+
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setCardData(prev => ({ ...prev, [name]: value }));
+      };
+
+      return (
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
+          <div className="flex-1 bg-white p-6 md:p-8 rounded-3xl shadow-lg border-4 border-orange-200 no-print">
+            <h2 className="text-3xl mb-6 flex items-center gap-2 text-orange-600 drop-shadow-sm">
+              <span>📤</span> 광물 정보 적어주기 📝
+            </h2>
+            <div className="space-y-6 text-lg">
+              <div>
+                <label className="block text-xl text-slate-700 mb-2">어떤 돌을 찍었어? (사진 올리기)</label>
+                <input type="file" accept="image/*" onChange={handleImageUpload} ref={fileInputRef}
+                  className="block w-full text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-lg file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200 transition-colors cursor-pointer"
+                />
+              </div>
+              <div>
+                <label className="block text-xl text-slate-700 mb-2">이 돌의 이름은 뭘까? (내 맘대로 지어도 돼!)</label>
+                <input type="text" name="name" placeholder="예: 놀이터에서 주운 반짝이 돌" value={cardData.name} onChange={handleInputChange}
+                  className="w-full p-3 border-4 border-slate-200 rounded-xl focus:border-orange-400 focus:outline-none text-lg"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xl text-slate-700 mb-2">무슨 색이야?</label>
+                  <select name="color" value={cardData.color} onChange={handleInputChange} className="w-full p-3 border-4 border-slate-200 rounded-xl focus:border-orange-400 focus:outline-none text-lg">
+                    <option value="">선택해봐!</option>
+                    <option value="밤처럼 어두워 🖤">밤처럼 어두워 🖤</option>
+                    <option value="눈처럼 밝아 🤍">눈처럼 밝아 🤍</option>
+                    <option value="기타 (직접 쓸래!)">기타 (직접 쓸래!)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xl text-slate-700 mb-2">알갱이 크기는?</label>
+                  <select name="crystalSize" value={cardData.crystalSize} onChange={handleInputChange} className="w-full p-3 border-4 border-slate-200 rounded-xl focus:border-orange-400 focus:outline-none text-lg">
+                    <option value="">선택해봐!</option>
+                    <option value="눈에 안 보여! (작아 🐜)">눈에 안 보여! (작아 🐜)</option>
+                    <option value="눈에 잘 보여! (커 🐘)">눈에 잘 보여! (커 🐘)</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xl text-slate-700 mb-2">또 어떤 특징이 있어? (자세히 관찰해봐!)</label>
+                <textarea name="features" rows="3" placeholder="예: 검은색이랑 하얀색 점박이가 있어. 까끌까끌해!" value={cardData.features} onChange={handleInputChange}
+                  className="w-full p-3 border-4 border-slate-200 rounded-xl focus:border-orange-400 focus:outline-none resize-none text-lg"
+                ></textarea>
+              </div>
+              <div>
+                <label className="block text-xl text-slate-700 mb-2">멋진 관찰자의 이름은?</label>
+                <input type="text" name="finder" placeholder="네 이름을 적어줘!" value={cardData.finder} onChange={handleInputChange}
+                  className="w-full p-3 border-4 border-slate-200 rounded-xl focus:border-orange-400 focus:outline-none text-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col items-center">
+            <div className="w-full max-w-sm bg-white rounded-3xl overflow-hidden shadow-2xl border-8 border-orange-500 print-card mb-6 relative transform transition-transform hover:scale-105">
+              <div className="bg-orange-500 text-white p-5 flex justify-between items-center">
+                <h3 className="text-2xl drop-shadow-md">{cardData.name || '이름 모를 신비한 돌'}</h3>
+                <span className="text-3xl animate-pulse">🌟</span>
+              </div>
+              <div className="h-64 bg-slate-100 border-b-8 border-orange-500 flex items-center justify-center overflow-hidden">
+                {imagePreview ? (
+                  <img src={imagePreview} alt="광물 사진" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="text-slate-400 flex flex-col items-center gap-3">
+                    <span className="text-6xl animate-bounce inline-block">📤</span>
+                    <p className="text-xl">사진을 올려주면 나타날 거야!</p>
+                  </div>
+                )}
+              </div>
+              <div className="p-6 space-y-4 bg-yellow-50">
+                <div className="grid grid-cols-2 gap-3 text-lg">
+                  <div className="bg-white p-3 rounded-xl border-4 border-orange-200 shadow-sm text-center">
+                    <span className="block text-orange-400 mb-1">무슨 색?</span>
+                    <span className="text-slate-800">{cardData.color || '?'}</span>
+                  </div>
+                  <div className="bg-white p-3 rounded-xl border-4 border-orange-200 shadow-sm text-center">
+                    <span className="block text-orange-400 mb-1">알갱이 크기</span>
+                    <span className="text-slate-800">{cardData.crystalSize || '?'}</span>
+                  </div>
+                </div>
+                <div className="bg-white p-4 rounded-xl border-4 border-orange-200 shadow-sm min-h-[100px]">
+                  <span className="block text-orange-400 mb-2">어떤 특징이 있을까?</span>
+                  <p className="text-slate-800 text-lg whitespace-pre-wrap">{cardData.features || '아직 관찰한 내용이 없네!'}</p>
+                </div>
+                <div className="text-right text-xl text-orange-600 mt-4 pt-4 border-t-4 border-orange-200">
+                  탐험가 🕵️ : <span className="text-slate-800">{cardData.finder || '비밀친구'}</span>
+                </div>
+              </div>
+            </div>
+            <button 
+              onClick={() => window.print()}
+              className="no-print bg-red-500 text-white px-8 py-4 rounded-full text-2xl shadow-xl hover:bg-red-600 hover:scale-105 active:scale-95 transition-transform flex items-center gap-3"
+            >
+              <span>📸</span> 나만의 카드 캡처하기!
+            </button>
+            <p className="no-print mt-3 text-slate-500 text-sm">버튼을 누르고 화면을 캡처하거나 PDF로 저장해봐요!</p>
+          </div>
+        </div>
+      );
+    }
+
+    // React 앱을 화면에 그리기
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
