@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과학 탐험 월드 · Science Exploration World</title>
+
+<!-- 폰트: Galmuri(한글 픽셀체) + Press Start 2P(영문 픽셀체) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri/dist/galmuri.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Do+Hyeon&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   과학 탐험 월드 — 복셀(블록 픽셀아트) 컨셉
+   * 마인크래프트 공식 로고/에셋/캐릭터는 사용하지 않습니다.
+   * 모든 그래픽은 CSS로 직접 그린 복셀 스타일입니다.
+   ========================================================= */
+:root{
+  --px:4px;
+  --font-ko:"Galmuri11","Do Hyeon",sans-serif;
+  --font-ko-bold:"Galmuri14","Do Hyeon",sans-serif;
+  --font-en:"Press Start 2P",monospace;
+  /* 본문 가독성용 — 설명글은 또렷한 고딕으로 */
+  --font-read:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+
+  --sky-top:#79c4ff;  --sky-bottom:#bfe9ff;
+  --ground:#5fa83d;   --ground-dark:#3a6f25;
+  --soil:#6b4a2b;     --soil-dark:#4a3119;
+  --card-face:#c9a06a;--card-top:#dcb985;--card-side:#9c7541;--card-edge:#6b4a2b;
+  --ink:#2a1c10;      --ink-soft:#5a4226;
+  --accent:#ffcf3f;   --accent-deep:#e09b1c;
+  --bar:#7a5836;      --bar-edge:#4a3119;
+  --ambient:rgba(0,0,0,0); --star-op:0;
+}
+body[data-time="night"]{
+  --sky-top:#0c1233; --sky-bottom:#243a6b;
+  --ground:#2f6b3c;  --ground-dark:#1b3f23;
+  --ambient:rgba(6,10,30,.45); --star-op:1;
+}
+body[data-theme="cave"]{
+  --sky-top:#2a2622; --sky-bottom:#100d0b;
+  --ground:#4b4640;  --ground-dark:#2c2925;
+  --soil:#3a352f;    --soil-dark:#231f1b;
+  --card-face:#6a635a;--card-top:#807868;--card-side:#4a443c;--card-edge:#1c1916;
+  --ink:#f3e9d2;     --ink-soft:#bdb29a;
+  --accent:#ff9b3d;  --accent-deep:#c25e12;
+  --bar:#2c2925;     --bar-edge:#15120f;
+  --ambient:rgba(0,0,0,.35);
+}
+body[data-theme="cave"][data-time="night"]{ --sky-top:#16120f; --sky-bottom:#070504; --ambient:rgba(0,0,0,.6); }
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font-ko); color:var(--ink);
+  background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bottom) 100%);
+  min-height:100vh; overflow-x:hidden; position:relative;
+  transition:background .8s ease,color .8s ease; image-rendering:pixelated;
+}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background:var(--ambient);transition:background .8s ease;}
+
+/* ================= 하늘 ================= */
+.sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.celestial{position:absolute;top:96px;right:12%;width:72px;height:72px;transition:opacity .8s ease,transform .8s ease;}
+.sun{background:#ffe14d;box-shadow:0 0 0 8px rgba(255,225,77,.35),-16px 0 0 #ffd21f,16px 0 0 #ffd21f,0 -16px 0 #ffd21f,0 16px 0 #ffd21f;}
+.moon{background:#e7ecff;box-shadow:-16px 8px 0 #c2cbe8,8px -8px 0 #fff;opacity:0;}
+body[data-time="night"] .sun{opacity:0;transform:scale(.6);}
+body[data-time="night"] .moon{opacity:1;}
+body[data-theme="cave"] .celestial{opacity:0!important;}
+.stars{position:absolute;inset:0;opacity:var(--star-op);transition:opacity .8s ease;}
+.star{position:absolute;width:3px;height:3px;background:#fff;animation:twinkle 3s infinite ease-in-out;}
+@keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:1;}}
+.cloud{position:absolute;background:#fff;box-shadow:0 14px 0 #fff,28px 14px 0 #fff,-28px 14px 0 #fff,14px 28px 0 #eef6ff;opacity:.9;transition:opacity .8s ease;}
+.cloud.c1{top:120px;left:-120px;width:56px;height:18px;animation:drift 60s linear infinite;}
+.cloud.c2{top:200px;left:-160px;width:42px;height:14px;animation:drift 85s linear infinite;animation-delay:-20s;}
+.cloud.c3{top:90px;left:-200px;width:64px;height:20px;animation:drift 100s linear infinite;animation-delay:-50s;}
+@keyframes drift{from{transform:translateX(0);}to{transform:translateX(120vw);}}
+body[data-time="night"] .cloud,body[data-theme="cave"] .cloud{opacity:0;}
+.ores{position:absolute;inset:0;opacity:0;transition:opacity .8s ease;}
+body[data-theme="cave"] .ores{opacity:1;}
+.ore{position:absolute;width:14px;height:14px;background:#5a544c;box-shadow:inset 3px 3px 0 #6f685e,inset -3px -3px 0 #3a352f;}
+.ore::after{content:"";position:absolute;inset:4px;}
+.ore.gold::after{background:#ffcf3f;box-shadow:0 0 8px #ffcf3f;}
+.ore.diamond::after{background:#5ff0e0;box-shadow:0 0 8px #5ff0e0;}
+.ore.redstone::after{background:#ff3b3b;box-shadow:0 0 8px #ff3b3b;}
+
+/* ================= 상단 고정 툴바 ================= */
+.topbar{position:sticky;top:0;z-index:40;background:var(--bar);
+  box-shadow:inset 0 4px 0 rgba(255,255,255,.14),inset 0 -5px 0 var(--bar-edge),0 4px 0 rgba(0,0,0,.3);
+  transition:background .6s ease;}
+.bar-inner{display:flex;align-items:center;gap:12px;max-width:1180px;margin:0 auto;padding:10px 14px;}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;flex:0 0 auto;
+  font-family:var(--font-ko-bold);font-size:16px;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
+.brand .blk{width:20px;height:20px;background:var(--accent);box-shadow:inset -3px -3px 0 var(--accent-deep);}
+.unitnav{flex:1 1 auto;display:flex;gap:8px;overflow-x:auto;padding:4px 2px;scrollbar-width:thin;}
+.unitnav::-webkit-scrollbar{height:6px;}
+.unitnav::-webkit-scrollbar-thumb{background:rgba(0,0,0,.3);}
+.navbtn{flex:0 0 auto;font-family:var(--font-ko-bold);font-size:13px;color:#fff;cursor:pointer;text-decoration:none;
+  background:var(--card-side);padding:8px 11px;line-height:1;white-space:nowrap;
+  box-shadow:inset 2px 2px 0 rgba(255,255,255,.25),inset -3px -3px 0 rgba(0,0,0,.35);
+  transition:transform .1s ease,background .15s ease,color .15s ease;display:inline-flex;align-items:center;gap:6px;}
+.navbtn .n{font-family:var(--font-en);font-size:8px;opacity:.85;}
+.navbtn:hover{transform:translateY(-2px);}
+.navbtn.active{background:var(--accent);color:var(--ink);}
+.navbtn.active .n{color:var(--accent-deep);opacity:1;}
+.controls{flex:0 0 auto;display:flex;gap:8px;}
+.blockbtn{font-family:var(--font-ko-bold);font-size:13px;color:#fff;cursor:pointer;padding:9px 11px;background:var(--card-side);
+  border:none;line-height:1;box-shadow:inset 2px 2px 0 rgba(255,255,255,.3),inset -3px -3px 0 rgba(0,0,0,.4);
+  transition:transform .08s ease;display:flex;align-items:center;gap:6px;}
+.blockbtn:hover{transform:translateY(-2px);}
+.blockbtn:active{transform:translateY(1px);}
+
+/* ================= 히어로 ================= */
+.hero{position:relative;z-index:10;text-align:center;padding:64px 20px 30px;}
+.crumb{display:inline-block;font-family:var(--font-en);font-size:9px;letter-spacing:1px;color:#fff;background:var(--accent-deep);
+  padding:7px 12px;margin-bottom:22px;box-shadow:inset 2px 2px 0 rgba(255,255,255,.35),inset -2px -2px 0 rgba(0,0,0,.35),3px 3px 0 rgba(0,0,0,.3);}
+.title{font-family:var(--font-ko-bold);font-size:clamp(38px,8vw,82px);color:#fff;line-height:1.1;letter-spacing:2px;
+  text-shadow:0 var(--px) 0 #2f7d1c,0 calc(var(--px)*2) 0 #2f7d1c,0 calc(var(--px)*3) 0 #245e15,0 calc(var(--px)*4) 0 #1c4a10,calc(var(--px)*1.5) calc(var(--px)*5.5) 0 rgba(0,0,0,.35);}
+body[data-theme="cave"] .title{text-shadow:0 var(--px) 0 #7a5a2c,0 calc(var(--px)*2) 0 #7a5a2c,0 calc(var(--px)*3) 0 #5c4220,0 calc(var(--px)*4) 0 #3f2c15,calc(var(--px)*1.5) calc(var(--px)*5.5) 0 rgba(0,0,0,.5);}
+.subtitle{margin-top:26px;font-family:var(--font-en);font-size:11px;color:rgba(255,255,255,.9);letter-spacing:2px;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
+.tagline{margin-top:16px;font-family:var(--font-read);font-size:16px;color:rgba(255,255,255,.95);text-shadow:1px 1px 0 rgba(0,0,0,.35);}
+
+/* 검색 + 카운트 */
+.searchwrap{margin:28px auto 0;max-width:440px;display:flex;align-items:center;gap:10px;
+  background:var(--card-face);padding:10px 12px;
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.2),inset -4px -4px 0 var(--card-side),4px 4px 0 var(--card-edge);}
+.searchwrap .mag{font-size:16px;}
+.searchwrap input{flex:1;border:none;background:transparent;outline:none;font-family:var(--font-read);font-size:15px;color:var(--ink);}
+.searchwrap input::placeholder{color:var(--ink-soft);opacity:.8;}
+.searchwrap .clr{cursor:pointer;font-family:var(--font-ko-bold);font-size:13px;color:var(--ink-soft);background:none;border:none;display:none;}
+.countline{margin-top:14px;font-family:var(--font-read);font-size:13px;color:rgba(255,255,255,.92);text-shadow:1px 1px 0 rgba(0,0,0,.3);}
+.countline b{color:var(--accent);}
+
+/* ================= 본문 ================= */
+main{position:relative;z-index:10;max-width:1080px;margin:0 auto;padding:6px 20px 40px;}
+.unit{scroll-margin-top:78px;margin:28px 0 8px;}
+.unit-head{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-ko-bold);font-size:21px;color:var(--ink);
+  background:var(--card-top);padding:9px 16px;margin-bottom:16px;
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.4),inset -3px -3px 0 rgba(0,0,0,.25),4px 4px 0 rgba(0,0,0,.25);}
+.unit-head .blk{width:18px;height:18px;background:var(--accent);box-shadow:inset -3px -3px 0 var(--accent-deep);}
+.unit-head .cnt{font-family:var(--font-en);font-size:9px;color:#fff;background:var(--accent-deep);padding:4px 7px;
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.3);}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
+
+.card{position:relative;display:block;text-decoration:none;color:var(--ink);background:var(--card-face);padding:18px 18px 16px;
+  border-top:6px solid var(--card-top);
+  box-shadow:inset 4px 4px 0 rgba(255,255,255,.18),inset -5px -5px 0 var(--card-side),6px 6px 0 var(--card-edge);
+  transition:transform .12s ease,box-shadow .12s ease;opacity:0;transform:translateY(16px);animation:rise .5s forwards;}
+@keyframes rise{to{opacity:1;transform:translateY(0);}}
+.card[href]:hover{transform:translateY(-6px);box-shadow:inset 4px 4px 0 rgba(255,255,255,.25),inset -5px -5px 0 var(--card-side),6px 12px 0 var(--card-edge);}
+.card .icon{width:40px;height:40px;margin-bottom:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.45),inset -3px -3px 0 var(--accent-deep);}
+.card h3{font-family:var(--font-ko-bold);font-size:17px;line-height:1.35;margin-bottom:8px;}
+.card p{font-family:var(--font-read);font-size:13.5px;color:var(--ink-soft);line-height:1.55;}
+.card .go{margin-top:14px;font-family:var(--font-en);font-size:8px;letter-spacing:1px;color:var(--accent-deep);}
+.card.todo{opacity:.72;cursor:default;}
+.card.todo .icon{background:var(--card-side);box-shadow:inset 3px 3px 0 rgba(255,255,255,.25),inset -3px -3px 0 var(--card-edge);}
+.card.todo .go{color:var(--ink-soft);}
+
+/* 빈 단원 */
+.empty{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:22px;background:var(--card-face);opacity:.7;
+  box-shadow:inset 4px 4px 0 rgba(255,255,255,.15),inset -5px -5px 0 var(--card-side),6px 6px 0 var(--card-edge);}
+.empty .ic{width:38px;height:38px;flex:0 0 auto;background:var(--card-side);display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.2),inset -3px -3px 0 var(--card-edge);}
+.empty p{font-family:var(--font-read);font-size:14px;color:var(--ink-soft);line-height:1.5;}
+
+.noresult{display:none;text-align:center;padding:50px 20px;font-family:var(--font-read);font-size:16px;color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.3);}
+
+/* ================= 오락실 포털 ================= */
+.portal-wrap{margin:50px 0 20px;display:flex;justify-content:center;}
+.portal{position:relative;display:flex;align-items:center;gap:20px;text-decoration:none;color:#fff;padding:24px 36px;
+  background:linear-gradient(135deg,#5a2b8c,#7a3bb5);
+  box-shadow:inset 4px 4px 0 rgba(255,255,255,.25),inset -5px -5px 0 rgba(0,0,0,.45),6px 6px 0 rgba(0,0,0,.4),0 0 30px rgba(157,78,221,.55);
+  transition:transform .12s ease,box-shadow .12s ease;}
+.portal:hover{transform:translateY(-4px);box-shadow:inset 4px 4px 0 rgba(255,255,255,.3),inset -5px -5px 0 rgba(0,0,0,.45),6px 10px 0 rgba(0,0,0,.4),0 0 44px rgba(157,78,221,.8);}
+.portal .pic{width:54px;height:54px;background:#2a103f;box-shadow:inset 3px 3px 0 #b06be0,inset -3px -3px 0 #3d1a5c;display:flex;align-items:center;justify-content:center;font-size:28px;animation:portalpulse 2.5s ease-in-out infinite;}
+@keyframes portalpulse{0%,100%{box-shadow:inset 3px 3px 0 #b06be0,inset -3px -3px 0 #3d1a5c,0 0 0 rgba(176,107,224,0);}50%{box-shadow:inset 3px 3px 0 #d49bff,inset -3px -3px 0 #3d1a5c,0 0 18px rgba(212,155,255,.9);}}
+.portal .txt small{font-family:var(--font-en);font-size:8px;letter-spacing:1px;opacity:.8;}
+.portal .txt b{display:block;font-family:var(--font-ko-bold);font-size:24px;margin-top:8px;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
+
+/* ================= 푸터 ================= */
+.grassline{position:relative;z-index:10;height:26px;background:var(--ground);box-shadow:inset 0 8px 0 rgba(255,255,255,.12),inset 0 -6px 0 var(--ground-dark);}
+footer{position:relative;z-index:10;background:var(--soil);border-top:8px solid var(--ground);text-align:center;padding:34px 20px 44px;box-shadow:inset 0 6px 0 var(--soil-dark);}
+footer .maker{font-family:var(--font-ko-bold);font-size:18px;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
+footer .role{margin-top:8px;font-family:var(--font-read);font-size:14px;color:#f0dcc0;}
+footer .copy{margin-top:18px;font-family:var(--font-en);font-size:8px;letter-spacing:1px;color:#d9c3a3;line-height:2;}
+
+/* ================= 맨 위로 ================= */
+.toTop{position:fixed;right:18px;bottom:18px;z-index:45;width:50px;height:50px;cursor:pointer;border:none;
+  background:var(--accent);color:var(--ink);font-size:22px;font-family:var(--font-ko-bold);
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.5),inset -4px -4px 0 var(--accent-deep),4px 4px 0 rgba(0,0,0,.35);
+  opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease;}
+.toTop.show{opacity:1;pointer-events:auto;transform:translateY(0);}
+.toTop:hover{transform:translateY(-3px);}
+
+@media(max-width:640px){
+  .brand span.t{display:none;}
+  .hero{padding:46px 16px 24px;}
+  .grid{grid-template-columns:1fr 1fr;gap:12px;}
+  .card{padding:14px;}.card h3{font-size:15px;}
+  .blockbtn span.t{display:none;}
+}
+/* 모션 최소화 선호 사용자 배려 */
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+}
+</style>
+</head>
+<body data-time="day" data-theme="wild">
+
+<!-- 하늘 -->
+<div class="sky">
+  <div class="stars" id="stars"></div>
+  <div class="celestial sun"></div>
+  <div class="celestial moon"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <div class="ores" id="ores"></div>
+</div>
+
+<!-- 상단 고정 툴바 -->
+<div class="topbar">
+  <div class="bar-inner">
+    <a class="brand" href="#top"><span class="blk"></span><span class="t">과학 탐험 월드</span></a>
+    <nav class="unitnav" id="unitNav" aria-label="단원 바로가기"></nav>
+    <div class="controls">
+      <button class="blockbtn" id="timeBtn" aria-label="낮과 밤 전환"><span class="ic" id="timeIc">☀️</span><span class="t" id="timeTx">낮</span></button>
+      <button class="blockbtn" id="themeBtn" aria-label="야생과 동굴 테마 전환"><span class="ic" id="themeIc">🌳</span><span class="t" id="themeTx">야생</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- 히어로 -->
+<section class="hero" id="top">
+  <span class="crumb">EXPLORE · LEARN · PLAY</span>
+  <h1 class="title">과학 탐험 월드</h1>
+  <div class="subtitle">SCIENCE EXPLORATION WORLD</div>
+  <p class="tagline">블록을 깨듯 하나씩, 직접 탐험하며 배우는 과학 세계</p>
+
+  <div class="searchwrap">
+    <span class="mag">🔍</span>
+    <input id="search" type="text" placeholder="실험실 이름으로 검색…" aria-label="실험실 검색">
+    <button class="clr" id="clearBtn" aria-label="검색 지우기">지우기 ✕</button>
+  </div>
+  <p class="countline" id="countLine"></p>
+</section>
+
+<!-- 본문 -->
+<main id="appRoot"></main>
+<p class="noresult" id="noResult">앗, 그런 이름의 실험실은 아직 없어요 ⛏️</p>
+
+<!-- 오락실 포털 -->
+<div class="portal-wrap">
+  <!-- 🔗 해누리오락실 주소로 ARCADE_URL 을 교체하세요 -->
+  <a class="portal" id="arcadeLink" href="#" target="_blank" rel="noopener">
+    <div class="pic">🎮</div>
+    <div class="txt"><small>MINI GAME ZONE</small><b>해누리오락실 입장 →</b></div>
+  </a>
+</div>
+
+<div class="grassline"></div>
+<footer>
+  <div class="maker">해누리중학교 조승재</div>
+  <div class="role">(과학이조선생)</div>
+  <div class="copy">© 2026 JO SEUNG-JAE · HAENURI MIDDLE SCHOOL · ALL RIGHTS RESERVED</div>
+</footer>
+
+<button class="toTop" id="toTop" aria-label="맨 위로">▲</button>
+
+<script>
+/* =========================================================
+   ✏️ 여기만 고치면 됩니다 — 단원별 앱 목록
+   - no    : 단원 번호 (1~8)
+   - unit  : 단원 이름
+   - apps  : 실험실 목록  (icon / title / desc / url)
+   - url 이 "" 이면 '준비 중' 잠금 카드,  apps 가 [] 이면 '준비 중' 단원
+   ========================================================= */
+const ARCADE_URL = "#"; // 🔗 해누리오락실 메인 주소로 교체
+
+const UNITS = [
+  {
+    no:1, unit:"물질의 특성",
+    apps:[
+      {icon:"⚖️", title:"밀도 실험실",      desc:"질량과 부피로 밀도를 알아보는 활동",     url:"https://scienceisjo.github.io/propertiesofmatter/"},
+      {icon:"🧂", title:"용해도 실험실",     desc:"온도에 따른 용해도 변화를 탐구하는 활동", url:"https://scienceisjo.github.io/propertiesofmatter/solubility"},
+      {icon:"🌡️", title:"녹는점과 끓는점",   desc:"가열 곡선으로 물질을 구별하는 실험실",   url:"https://scienceisjo.github.io/propertiesofmatter/bpmp"},
+    ]
+  },
+  {
+    no:2, unit:"지권의 변화",
+    apps:[
+      {icon:"🏜️", title:"퇴적암의 여행",     desc:"퇴적암이 만들어지는 과정을 따라가는 모험",   url:"https://scienceisjo.github.io/sedimentaryrock-adventure/"},
+      {icon:"🌍", title:"지권의 층상구조",   desc:"지구 내부 층상구조를 탐험하는 지구 탐험대", url:"https://scienceisjo.github.io/-layered-structure-of-the-earth/"},
+      {icon:"💎", title:"광물 실험실",       desc:"광물의 성질을 관찰하고 구별하는 실험실", url:"https://scienceisjo.github.io/minerallab/"},
+      {icon:"🍞", title:"변성암 베이커리",   desc:"열과 압력으로 변성암이 만들어지는 과정 체험", url:"https://scienceisjo.github.io/metamorphic-rock/"},
+      {icon:"🧭", title:"암석 분류 알고리즘", desc:"분류 기준을 세워 암석을 나누는 알고리즘 만들기", url:"https://scienceisjo.github.io/rock-classification/"},
+    ]
+  },
+  { no:3, unit:"빛과 파동", apps:[] },
+  {
+    no:4, unit:"물질의 구성",
+    apps:[
+      {icon:"🗺️", title:"마법의 원소 지도",   desc:"주기율표의 역사를 픽셀아트로 탐험하는 게임", url:""},
+      {icon:"💧", title:"물의 전기분해로 알아보는 원소와 화합물", desc:"물을 전기분해해 원소와 화합물을 구별하는 실험", url:"https://scienceisjo.github.io/element_compound/"},
+      {icon:"⚛️", title:"원자 제작소",         desc:"양성자·중성자·전자로 원자를 직접 만드는 활동", url:"https://scienceisjo.github.io/atomicnumber/"},
+      {icon:"🧪", title:"주기율표 분류 탐구",   desc:"족·주기 성질을 발견하는 분류 활동",        url:""},
+      {icon:"🍽️", title:"입자 레스토랑",        desc:"원자·분자·이온을 6개 탭으로 즐기는 실험실", url:""},
+      {icon:"🔋", title:"이온의 이동 확인하기 (시뮬레이션)", desc:"전기장 속 이온의 이동을 관찰하는 시뮬레이션", url:"https://scienceisjo.github.io/ionicmovement/"},
+      {icon:"🧫", title:"이온의 이동 확인하기 (실험)", desc:"전류를 흘려 이온의 이동을 직접 확인하는 실험", url:"https://scienceisjo.github.io/ioncharge/"},
+      {icon:"⭐", title:"이온을 별의 커비로 이해하기", desc:"친근한 캐릭터로 이온 형성을 이해하는 활동", url:"https://scienceisjo.github.io/ionicmovement/ionkerby"},
+    ]
+  },
+  { no:5, unit:"식물과 에너지", apps:[] },
+  { no:6, unit:"동물과 에너지", apps:[] },
+  { no:7, unit:"전기와 자기",   apps:[] },
+  { no:8, unit:"별과 우주",     apps:[] },
+];
+
+/* ---------- 렌더링 ---------- */
+const root=document.getElementById('appRoot');
+const nav=document.getElementById('unitNav');
+let cardIndex=0, totalApps=0, openApps=0;
+
+UNITS.forEach(u=>{
+  // 점프 버튼
+  const btn=document.createElement('a');
+  btn.className='navbtn'; btn.href='#unit-'+u.no; btn.dataset.target='unit-'+u.no;
+  btn.innerHTML='<span class="n">'+String(u.no).padStart(2,'0')+'</span>'+u.unit;
+  nav.appendChild(btn);
+
+  const sec=document.createElement('section');
+  sec.className='unit'; sec.id='unit-'+u.no;
+  const head=document.createElement('div');
+  head.className='unit-head';
+  const cnt=u.apps.length;
+  head.innerHTML='<span class="blk"></span>('+u.no+') '+u.unit+'<span class="cnt">'+(cnt>0?cnt+'개':'준비 중')+'</span>';
+  sec.appendChild(head);
+
+  const grid=document.createElement('div');
+  grid.className='grid';
+
+  if(cnt===0){
+    const e=document.createElement('div');
+    e.className='empty';
+    e.innerHTML='<div class="ic">⛏️</div><p>이 단원의 실험실은 지금 열심히 만들고 있어요. 곧 새로운 블록이 추가됩니다!</p>';
+    grid.appendChild(e);
+  }else{
+    u.apps.forEach(a=>{
+      const ready=a.url && a.url.trim()!=="";
+      totalApps++; if(ready) openApps++;
+      const card=document.createElement(ready?'a':'div');
+      card.className='card'+(ready?'':' todo');
+      if(ready){card.href=a.url;card.target='_blank';card.rel='noopener';}
+      else{card.setAttribute('aria-disabled','true');}
+      card.dataset.search=(a.title+' '+a.desc).toLowerCase();
+      card.style.animationDelay=(cardIndex*0.04)+'s'; cardIndex++;
+      card.innerHTML='<div class="icon">'+a.icon+'</div><h3>'+a.title+'</h3><p>'+a.desc+'</p><div class="go">'+(ready?'OPEN ▸':'준비 중 ◷')+'</div>';
+      grid.appendChild(card);
+    });
+  }
+  sec.appendChild(grid);
+  root.appendChild(sec);
+});
+
+document.getElementById('countLine').innerHTML='지금 <b>'+openApps+'개</b>의 실험실이 열려 있어요 · 총 '+UNITS.length+'단원';
+document.getElementById('arcadeLink').href=ARCADE_URL;
+
+/* ---------- 별 / 광석 ---------- */
+const starBox=document.getElementById('stars');
+for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*70+'%';s.style.animationDelay=(Math.random()*3)+'s';starBox.appendChild(s);}
+const oreBox=document.getElementById('ores');const oreTypes=['gold','diamond','redstone','',''];
+for(let i=0;i<26;i++){const o=document.createElement('div');const t=oreTypes[Math.floor(Math.random()*oreTypes.length)];o.className='ore'+(t?(' '+t):'');o.style.left=Math.random()*100+'%';o.style.top=Math.random()*100+'%';oreBox.appendChild(o);}
+
+/* ---------- 검색 ---------- */
+const search=document.getElementById('search');
+const clearBtn=document.getElementById('clearBtn');
+const noResult=document.getElementById('noResult');
+function runSearch(){
+  const q=search.value.trim().toLowerCase();
+  clearBtn.style.display=q?'block':'none';
+  let any=false;
+  document.querySelectorAll('.unit').forEach(sec=>{
+    let vis=0;
+    sec.querySelectorAll('.card').forEach(c=>{
+      const m=!q||(c.dataset.search||'').includes(q);
+      c.style.display=m?'':'none'; if(m)vis++;
+    });
+    const emptyBox=sec.querySelector('.empty');
+    if(emptyBox) emptyBox.style.display=q?'none':'';
+    sec.style.display=(q&&vis===0)?'none':'';
+    if(vis>0||(!q)) any=true;
+  });
+  noResult.style.display=(q&&!any)?'block':'none';
+}
+search.addEventListener('input',runSearch);
+clearBtn.addEventListener('click',()=>{search.value='';runSearch();search.focus();});
+
+/* ---------- 스크롤 추적: 현재 단원 강조 ---------- */
+const navBtns=[...document.querySelectorAll('.navbtn')];
+function setActive(id){navBtns.forEach(b=>b.classList.toggle('active',b.dataset.target===id));}
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)setActive(e.target.id);});
+},{rootMargin:'-45% 0px -50% 0px',threshold:0});
+document.querySelectorAll('.unit').forEach(s=>io.observe(s));
+
+/* ---------- 맨 위로 ---------- */
+const toTop=document.getElementById('toTop');
+window.addEventListener('scroll',()=>{toTop.classList.toggle('show',window.scrollY>420);});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+/* ---------- 토글 + 설정 저장 ---------- */
+const body=document.body;
+const timeBtn=document.getElementById('timeBtn');
+const themeBtn=document.getElementById('themeBtn');
+function paint(){
+  document.getElementById('timeIc').textContent=body.dataset.time==='night'?'🌙':'☀️';
+  document.getElementById('timeTx').textContent=body.dataset.time==='night'?'밤':'낮';
+  document.getElementById('themeIc').textContent=body.dataset.theme==='cave'?'⛏️':'🌳';
+  document.getElementById('themeTx').textContent=body.dataset.theme==='cave'?'동굴':'야생';
+}
+function save(){try{localStorage.setItem('sew-time',body.dataset.time);localStorage.setItem('sew-theme',body.dataset.theme);}catch(e){}}
+try{const t=localStorage.getItem('sew-time');const th=localStorage.getItem('sew-theme');if(t)body.dataset.time=t;if(th)body.dataset.theme=th;}catch(e){}
+paint();
+timeBtn.addEventListener('click',()=>{body.dataset.time=body.dataset.time==='night'?'day':'night';paint();save();});
+themeBtn.addEventListener('click',()=>{body.dataset.theme=body.dataset.theme==='cave'?'wild':'cave';paint();save();});
+</script>
+</body>
+</html>
