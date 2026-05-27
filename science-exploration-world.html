@@ -128,6 +128,7 @@ main{position:relative;z-index:10;max-width:1080px;margin:0 auto;padding:6px 20p
 .card .icon{width:40px;height:40px;margin-bottom:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:inset 3px 3px 0 rgba(255,255,255,.45),inset -3px -3px 0 var(--accent-deep);transition:box-shadow .2s ease;}
 .card h3{font-family:var(--font-ko-bold);font-size:17px;line-height:1.35;margin-bottom:10px;}
 .card .quiz{font-family:var(--font-read);font-size:13.5px;color:var(--ink-soft);line-height:1.55;min-height:42px;}
+.card .desc{font-family:var(--font-read);font-size:12px;color:var(--ink-soft);line-height:1.5;margin-top:8px;opacity:.9;}
 .card .go{margin-top:14px;font-family:var(--font-en);font-size:8px;letter-spacing:1px;color:var(--accent-deep);}
 .card.todo{opacity:.72;cursor:default;}
 .card.todo .icon{background:var(--card-side);box-shadow:inset 3px 3px 0 rgba(255,255,255,.25),inset -3px -3px 0 var(--card-edge);}
@@ -277,6 +278,7 @@ const CATS=[
 
 const UNITS=[
   { no:1, unit:"물질의 특성", biome:{t:'day',th:'wild'}, apps:[
+    {icon:"🔀", title:"순물질과 혼합물", q:"순물질과 혼합물은 무엇이 다를까?", desc:"스티브의 물질 분류·입자쟁탈전 등의 게임이 안에 들어 있어요.", url:"https://scienceisjo.github.io/propertiesofmatter/puremixture.html", nw:true},
     {icon:"⚖️", title:"밀도 실험실", q:"쇠구슬은 가라앉는데 거대한 배는 왜 뜰까?", url:"https://scienceisjo.github.io/propertiesofmatter/"},
     {icon:"🧂", title:"용해도 실험실", q:"뜨거운 물에 설탕이 더 잘 녹는 이유는?", url:"https://scienceisjo.github.io/propertiesofmatter/solubility"},
     {icon:"🌡️", title:"녹는점과 끓는점", q:"물질마다 정해진 '변신 온도'가 있다고?", url:"https://scienceisjo.github.io/propertiesofmatter/bpmp"},
@@ -329,12 +331,12 @@ function makeCard(a){
   card.className='card'+(ready?'':' todo');
   if(ready){card.href=a.url;card.target='_blank';card.rel='noopener';card.dataset.url=a.url;}
   else card.setAttribute('aria-disabled','true');
-  card.dataset.search=(a.title+' '+(a.q||'')).toLowerCase();
+  card.dataset.search=(a.title+' '+(a.q||'')+' '+(a.desc||'')).toLowerCase();
   const isMined=ready&&mined.has(a.url);
   if(isMined)card.classList.add('mined');
   const corner=a.nw?'<span class="newbadge">NEW</span>':(isMined?'<span class="minedmark">⛏ 채굴</span>':'');
   const go=!ready?'준비 중 ◷':(isMined?'채굴 완료 ✓':'OPEN ▸');
-  card.innerHTML=corner+'<div class="icon">'+a.icon+'</div><h3>'+a.title+'</h3><p class="quiz">🤔 '+(a.q||'')+'</p><div class="go">'+go+'</div>';
+  card.innerHTML=corner+'<div class="icon">'+a.icon+'</div><h3>'+a.title+'</h3><p class="quiz">🤔 '+(a.q||'')+'</p>'+(a.desc?'<p class="desc">'+a.desc+'</p>':'')+'<div class="go">'+go+'</div>';
   if(ready)card.addEventListener('click',ev=>{markMined(a.url);burst(ev.clientX,ev.clientY);breakSound();});
   return card;
 }
