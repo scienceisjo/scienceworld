@@ -271,9 +271,12 @@ footer .copy{margin-top:18px;font-family:var(--font-en);font-size:8px;letter-spa
    url 비우면 '준비 중' 잠금 / 배열 비우면 '준비 중' 갈래
    ========================================================= */
 const CATS=[
-  {id:'mid2',    label:'중2과학',          icon:'🧪'},
+  {id:'mid2',    label:'중2과학',           icon:'🧪'},
   {id:'mystery', label:'추리로 배우는 과학', icon:'🔎', biome:{t:'night',th:'wild'}},
   {id:'game',    label:'게임으로 배우는 과학',icon:'🎮', biome:{t:'day',th:'wild'}},
+  {id:'comic',   label:'과학 만화',          icon:'📖', biome:{t:'day',th:'wild'}},
+  {id:'maker',   label:'만들며 배우는 과학', icon:'🔨', biome:{t:'day',th:'wild'}},
+  {id:'info',    label:'정보 & 가이드',      icon:'📋', biome:{t:'day',th:'wild'}},
 ];
 
 const UNITS=[
@@ -315,7 +318,24 @@ const MYSTERY=[
   {icon:"🕵️", title:"물질 추리 탐정", q:"물질의 성질만으로 정체를 밝힐 수 있을까?", url:"https://scienceisjo.github.io/propertiesofmatter/mattersnoop.html", nw:true},
 ];
 
-const GAMES=[]; // 🎮 게임 링크는 여기에 추가하세요
+const GAMES=[
+  {icon:"🤥", title:"라이어 게임", q:"누가 거짓말을 하고 있을까?", url:"https://scienceisjo.github.io/liargame_/", nw:true},
+  {icon:"⏱️", title:"Only 5 Seconds", q:"5초 안에 정답을 말할 수 있을까?", url:"https://scienceisjo.github.io/only5seconds/", nw:true},
+]; // 🎮 게임 링크는 여기에 추가하세요
+
+const COMICS=[
+  // 📖 과학 만화는 여기에 추가하세요
+  // 예: {icon:"📖", title:"제목", q:"호기심 질문", desc:"한 줄 설명(선택)", url:"https://..."},
+];
+
+const MAKER=[
+  {icon:"🌈", title:"플로팅 홀로그램 만들기", q:"투명 피라미드로 어떻게 입체 영상을 띄울까?", url:"https://scienceisjo.github.io/hologram/new.html", nw:true},
+  {icon:"🌊", title:"나만의 간이 염분계 만들기", q:"전기로 바닷물의 짠 정도를 잴 수 있을까?", url:"https://scienceisjo.github.io/portfolio/Salinitytester.html", nw:true},
+];
+
+const INFO=[
+  {icon:"💻", title:"바이브 코딩 결과물 배포하기", q:"내가 만든 웹앱을 어떻게 세상에 공개할까?", desc:"학생용 GitHub 배포 매뉴얼이에요.", url:"https://scienceisjo.github.io/githubmanual/forstudent.html", nw:true},
+];
 
 /* ---------- 진행도 저장 ---------- */
 function loadMined(){try{return new Set(JSON.parse(localStorage.getItem('sew-mined')||'[]'));}catch(e){return new Set();}}
@@ -380,8 +400,11 @@ function makeCatSection(cat,apps,emptyMsg){
 }
 makeCatSection(CATS[1],MYSTERY,'추리 콘텐츠를 준비하고 있어요!');
 makeCatSection(CATS[2],GAMES,'게임 콘텐츠를 준비하고 있어요. 곧 만나요! 🎮');
+makeCatSection(CATS[3],COMICS,'과학 만화를 준비하고 있어요. 곧 새 에피소드가 올라옵니다! 📖');
+makeCatSection(CATS[4],MAKER,'만들기 활동을 준비하고 있어요! 🔨');
+makeCatSection(CATS[5],INFO,'유용한 정보·가이드를 준비하고 있어요! 📋');
 
-document.getElementById('countLine').innerHTML='지금 <b>'+openApps+'개</b>의 실험실 · 중2과학·추리·게임 3개 갈래로 탐험해요 ⛏️';
+document.getElementById('countLine').innerHTML='지금 <b>'+openApps+'개</b>의 실험실 · 중2과학·추리·게임·만화·만들기·정보 6개 갈래로 탐험해요 ⛏️';
 
 /* ---------- 진행도 ---------- */
 const pfill=document.getElementById('pfill'),ptext=document.getElementById('ptext');
