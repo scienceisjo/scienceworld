@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과학 탐험 월드 · 웹앱 사용 설명서</title>
+<style>
+:root{
+  --ink:#232323;--sub:#555;--faint:#8a8a8a;--line:#e2ddd2;
+  --gold:#c98a12;--gold-bg:#fff7e4;--paper:#fbfaf7;--card:#ffffff;
+  --unit1:#2e7d32;--unit2:#8a5a34;--unit3:#3a6fd8;--unit4:#7b4fd8;
+  --mystery:#31456e;--game:#c2452f;--maker:#2e7d6f;--tools:#5b5f66;--info:#846c2f;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.65;}
+.wrap{max-width:860px;margin:0 auto;padding:36px 22px 80px;}
+/* 헤더 */
+.head{border:3px solid var(--ink);background:var(--card);padding:26px 26px 22px;box-shadow:6px 6px 0 rgba(0,0,0,.12);}
+.head .eyebrow{font-size:12px;letter-spacing:3px;color:var(--gold);font-weight:800;}
+.head h1{font-size:clamp(24px,4.6vw,34px);letter-spacing:-.5px;margin-top:6px;}
+.head p.lead{margin-top:12px;color:var(--sub);font-size:15px;}
+.head .btns{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--ink);background:#ffcf3f;color:#3a2a00;font-weight:800;font-size:14px;padding:10px 16px;cursor:pointer;text-decoration:none;box-shadow:3px 3px 0 rgba(0,0,0,.2);}
+.btn.ghost{background:#fff;color:var(--ink);}
+.btn:hover{transform:translateY(-2px);}
+/* 공통 안내 */
+.common{margin-top:22px;border:2px dashed var(--gold);background:var(--gold-bg);padding:16px 18px;}
+.common b{color:var(--gold);}
+.common ul{margin-top:8px;padding-left:20px;font-size:14px;color:var(--sub);}
+/* 목차 */
+.toc{margin-top:26px;border:3px solid var(--ink);background:var(--card);padding:20px 22px;box-shadow:6px 6px 0 rgba(0,0,0,.12);}
+.toc h2{font-size:17px;margin-bottom:12px;}
+.toc ol{padding-left:22px;font-size:14.5px;columns:2;column-gap:32px;}
+.toc li{margin-bottom:6px;break-inside:avoid;}
+.toc a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--faint);}
+.toc a:hover{color:var(--gold);}
+/* 섹션 */
+.section{margin-top:44px;}
+.sec-head{display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--ink);padding-bottom:10px;margin-bottom:6px;}
+.sec-head .chip{width:16px;height:16px;background:var(--accent,#ffcf3f);border:2px solid var(--ink);flex:0 0 auto;}
+.sec-head h2{font-size:21px;letter-spacing:-.3px;}
+.sec-head .cnt{margin-left:auto;font-size:12px;font-weight:800;color:#fff;background:var(--ink);padding:4px 9px;}
+.sec-desc{font-size:14px;color:var(--sub);margin:10px 2px 4px;}
+/* 앱 항목 */
+.app{margin-top:20px;border:2px solid var(--ink);background:var(--card);padding:20px 22px;box-shadow:4px 4px 0 rgba(0,0,0,.09);page-break-inside:avoid;break-inside:avoid;}
+.app-top{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+.app-icon{width:40px;height:40px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--gold-bg);border:2px solid var(--ink);}
+.app-tit{flex:1;min-width:200px;}
+.app-tit h3{font-size:17.5px;line-height:1.4;letter-spacing:-.2px;}
+.app-tit .url{font-size:12px;color:var(--faint);word-break:break-all;margin-top:3px;}
+.app-tit .url a{color:var(--faint);}
+.applink{flex:0 0 auto;align-self:center;border:2px solid var(--ink);background:#eaf6ea;color:var(--unit1);font-weight:800;font-size:13px;padding:8px 13px;text-decoration:none;box-shadow:2px 2px 0 rgba(0,0,0,.15);}
+.applink:hover{transform:translateY(-1px);}
+.what{margin-top:12px;font-size:14.5px;background:#f5f3ee;border-left:4px solid var(--gold);padding:10px 13px;}
+.h4{margin-top:14px;font-size:13.5px;font-weight:800;color:var(--gold);display:flex;gap:6px;align-items:center;}
+.feat{margin-top:7px;padding-left:2px;list-style:none;}
+.feat li{font-size:13.5px;color:var(--ink);padding:5px 0 5px 20px;position:relative;border-bottom:1px dashed var(--line);}
+.feat li::before{content:"▪";position:absolute;left:4px;color:var(--gold);}
+.use,.note{margin-top:7px;font-size:13.5px;color:var(--sub);}
+.note b{color:#a33;}
+.todo-badge{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:#8a8a8a;padding:3px 8px;margin-left:8px;vertical-align:middle;}
+/* 푸터 */
+.foot{margin-top:56px;text-align:center;color:var(--faint);font-size:13px;border-top:2px solid var(--line);padding-top:22px;}
+.foot b{color:var(--ink);}
+.toTop{position:fixed;right:18px;bottom:18px;width:46px;height:46px;border:2px solid var(--ink);background:#ffcf3f;font-size:18px;cursor:pointer;box-shadow:3px 3px 0 rgba(0,0,0,.25);display:none;}
+@media print{
+  .btns,.toTop{display:none!important;}
+  body{background:#fff;}
+  .wrap{max-width:100%;padding:0;}
+  .head,.toc,.app{box-shadow:none;}
+  .section{margin-top:26px;}
+  a{text-decoration:none;color:inherit;}
+}
+@media(max-width:560px){.toc ol{columns:1;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">SCIENCE EXPLORATION WORLD · MANUAL</div>
+  <h1>📖 과학 탐험 월드 웹앱 사용 설명서</h1>
+  <p class="lead">해누리중학교 조승재(과학이조선생)가 직접 만든 수업 웹앱·게임·교사용 도구의 <b>전체 설명서</b>입니다.
+  각 앱이 무엇인지, 어떤 기능이 있는지, 수업에서 어떻게 쓰면 좋은지 실제 코드를 기준으로 정리했어요.</p>
+  <div class="btns">
+    <button class="btn" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+    <a class="btn ghost" href="science-exploration-world.html">🧱 과학 탐험 월드로 돌아가기</a>
+  </div>
+  <div class="common">
+    <b>모든 앱 공통</b>
+    <ul>
+      <li>로그인·설치·비용이 전혀 없습니다. 링크만 열면 바로 실행돼요. (PC·태블릿·폰)</li>
+      <li>학생 개인정보는 서버로 전송되지 않아요. 진행 기록은 각자 기기에만 저장됩니다.</li>
+      <li>수업 중에는 링크를 학급 게시판·QR로 공유하면 끝. 허브(과학 탐험 월드)에서 카드의 <b>ℹ️ 설명서</b> 버튼으로 이 내용을 바로 볼 수도 있어요.</li>
+    </ul>
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>목차</h2>
+  <ol>
+    <li><a href="#u1">중2과학 ① 물질의 특성 (5)</a></li>
+    <li><a href="#u2">중2과학 ② 지권의 변화 (7)</a></li>
+    <li><a href="#u3">중2과학 ③ 빛과 파동 (12)</a></li>
+    <li><a href="#u4">중2과학 ④ 물질의 구성 (7+1)</a></li>
+    <li><a href="#mystery">추리로 배우는 과학 (2)</a></li>
+    <li><a href="#game">게임으로 배우는 과학 (3)</a></li>
+    <li><a href="#maker">만들며 배우는 과학 (3)</a></li>
+    <li><a href="#tools">개발한 도구들 (3+1)</a></li>
+    <li><a href="#info">정보 &amp; 가이드 (1)</a></li>
+  </ol>
+</nav>
+
+<!-- ================= 물질의 특성 ================= -->
+<section class="section" id="u1" style="--accent:#5fbf4a">
+  <div class="sec-head"><span class="chip"></span><h2>중2과학 ① 물질의 특성</h2><span class="cnt">5개</span></div>
+  <p class="sec-desc">교과서 1단원. 순물질·혼합물 → 밀도 → 용해도 → 녹는점·끓는점 → 혼합물의 분리 차시 순서예요.</p>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🔀</span><div class="app-tit"><h3>순물질과 혼합물</h3><div class="url">scienceisjo.github.io/propertiesofmatter/puremixture.html</div></div><a class="applink" href="https://scienceisjo.github.io/propertiesofmatter/puremixture.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">순물질/혼합물 개념을 데이터 판독→분류 퀴즈→가상실험으로 잇는 5단계 스텝형 탐구 학습판(마인크래프트 픽셀 테마).</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>물질별 특성 데이터에서 '일정/범위' 직접 판정</li><li>순물질·혼합물 분류 퀴즈(점수 채점)</li><li>달걀+소금물 슬라이더 밀도 시뮬(뜨고 가라앉음)</li><li>물 vs 소금물 가열 그래프 실시간 비교(POE)</li><li>떨어지는 물질 분류 속도 게임(점수·콤보)</li><li>완주 시 이름·등급이 찍히는 수료증</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">전개~정리 단계 1인 1기기 자기주도 활동. 분류 게임은 모둠 대항전으로도 좋아요.</p>
+    <div class="h4">📌 참고</div><p class="note">모바일 지원 · 효과음(음소거 가능) · 로그인 없음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">⚖️</span><div class="app-tit"><h3>밀도 실험실 (밀도 탐정 사건 파일)</h3><div class="url">scienceisjo.github.io/propertiesofmatter/</div></div><a class="applink" href="https://scienceisjo.github.io/propertiesofmatter/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">밀도로 미지 물질·용의자를 식별하는 '사건 파일' 스토리형 추리 게임.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>사건·증거 수집 내러티브로 스테이지 진행</li><li>전자저울(질량)·부피 측정값으로 밀도 계산→물질 판정</li><li>슬라이더 20여 개로 실험값 직접 조작</li><li>탐정 테마 UI + 효과음</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">밀도(질량/부피) 계산을 배운 뒤 '사건 해결' 개인 미션이나 모둠 활동으로.</p>
+    <div class="h4">📌 참고</div><p class="note">모바일 지원 · 인터넷 연결 필요 · 로그인 없음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🧂</span><div class="app-tit"><h3>용해도 실험실</h3><div class="url">scienceisjo.github.io/propertiesofmatter/solubility</div></div><a class="applink" href="https://scienceisjo.github.io/propertiesofmatter/solubility" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">고체·기체 용해도를 실험→그래프 작도→계산까지 다루는 다단계 가상 실험실.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>질산칼륨·황산구리 온도별 용해 실험+냉각 결정 석출 애니메이션</li><li>용해도 곡선을 손으로 직접 작도(점 찍기·용질 칩 드래그)</li><li>용해도 계산 퀴즈(단계 풀이·즉시 피드백)</li><li>기체 용해도: 온도/압력 조건 전환+실생활 매칭 드래그 게임(생선·사이다·잠수부)</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">용해도 차시 전개 전체를 커버해요. 실제 실험 전 예습이나 실험 후 정리로, 계산·매칭은 모둠 퀴즈로.</p>
+    <div class="h4">📌 참고</div><p class="note">터치 지원 · 효과음 · 진도 저장은 안 됨(한 차시 안에 완료 권장)</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🌡️</span><div class="app-tit"><h3>녹는점과 끓는점 (POE 탐구)</h3><div class="url">scienceisjo.github.io/propertiesofmatter/bpmp</div></div><a class="applink" href="https://scienceisjo.github.io/propertiesofmatter/bpmp" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">끓는점·녹는점을 예측-관찰-설명(POE) 사이클로 학습하고 보고서까지 출력하는 대형 탐구 앱.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>반복되는 POE(예측→관찰→설명) 탐구 사이클</li><li>가열·냉각 곡선을 직접 그리면 자동 채점(점수·등급·체크리스트)</li><li>에탄올 끓음, 공기 vs 진공 등 가열 시뮬레이션</li><li>수료증(이름·반·등급) + 보고서 3종 내보내기(PDF/PNG/Word)</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">개인 심화 탐구·수행평가용. 자동채점과 보고서 출력이 있어 결과물 제출 과제로 좋아요.</p>
+    <div class="h4">📌 참고</div><p class="note">파일이 커서 첫 로딩이 잠깐 걸릴 수 있음 · 진행 자동 저장 · 효과음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">⚗️</span><div class="app-tit"><h3>혼합물의 분리</h3><div class="url">scienceisjo.github.io/separationofmixture/</div></div><a class="applink" href="https://scienceisjo.github.io/separationofmixture/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">혼합물 분리 차시별 가상실험 6종을 모아 놓은 허브 페이지.</p>
+    <div class="h4">✨ 안에 들어 있는 실험</div>
+    <ul class="feat"><li>밀도 차를 이용한 분리 가상실험</li><li>분별 결정(용해도 차) 가상실험</li><li>분별 증류(물+에탄올, 끓는점 차) 가상실험</li><li>녹는점 이용 분리 — 마인크래프트 제련소 게임</li><li>종합: 분리 실험을 직접 설계·수행하는 마인크래프트 분리 실험실</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">차시마다 해당 실험 카드를 열어 개인·모둠 가상실험으로. 종합 실험실은 단원 마무리 설계 활동으로.</p>
+    <div class="h4">📌 참고</div><p class="note">허브는 가벼운 링크 모음 · 하위 앱들은 게임형 포함</p>
+  </article>
+</section>
+
+<!-- ================= 지권의 변화 ================= -->
+<section class="section" id="u2" style="--accent:#8a5a34">
+  <div class="sec-head"><span class="chip" style="background:#b07f4f"></span><h2>중2과학 ② 지권의 변화</h2><span class="cnt">7개</span></div>
+  <p class="sec-desc">교과서 2단원. 지구계 → 지권의 층상구조 → 광물 → 화성암·퇴적암·변성암 → 암석 분류 차시 순서예요.</p>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🌐</span><div class="app-tit"><h3>어스밸런스</h3><div class="url">scienceisjo.github.io/scienceworld/earthbalance</div></div><a class="applink" href="https://scienceisjo.github.io/scienceworld/earthbalance" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">재난 카드가 지구계 5권역에 미치는 연쇄 효과를 예측하며 균형을 지키는 카드형 턴제 시뮬레이션 게임.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>재난·현상 이벤트 카드 14종(운석 충돌·화산 폭발·태풍·빙하 해빙 등)</li><li>카드마다 영향 권역 선택→1차·2차 연쇄 효과 예측 체크</li><li>기권·수권·지권·생물권·외권 건강도 게이지(0이 되면 게임 오버)</li><li>회복 카드 시스템 + 미션 4단계</li><li>최종 권역 상태 보고서 모달</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">지구계 상호작용 개념을 예측 게임으로 체험. 모둠별로 카드 토론 후 연쇄 효과를 함께 정하면 좋아요.</p>
+    <div class="h4">📌 참고</div><p class="note">로그인·저장 없음 · 한 판 15~25분</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🌍</span><div class="app-tit"><h3>지권의 층상구조</h3><div class="url">scienceisjo.github.io/-layered-structure-of-the-earth/</div></div><a class="applink" href="https://scienceisjo.github.io/-layered-structure-of-the-earth/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">지구 내부를 직접(시추)·간접(지진파·화산 분출물) 방법으로 조사해 층상구조를 밝혀내는 '지구 탐험대' 시뮬레이터.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>시추 게이지로 깊이별 지각·맨틀 확인(직접 조사의 한계 체험)</li><li>지진파 분석: P파/S파 속도 변화·S파 차단으로 외핵(액체) 추론</li><li>단서 카드를 모아 결론 내리는 수사(추리) 활동</li><li>지구 층 조립 + 실제 비율 두께 비교</li><li>퀴즈 28문항 + 업적 + 탐험 노트</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">'직접 팔 수 없는데 어떻게 알까?'라는 핵심 질문을 시뮬레이션으로 탐구. 조사법을 모둠별로 분담해도 좋아요.</p>
+    <div class="h4">📌 참고</div><p class="note">효과음 있음 · 세로 화면 권장(태블릿·폰)</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">💎</span><div class="app-tit"><h3>광물 실험실</h3><div class="url">scienceisjo.github.io/minerallab/</div></div><a class="applink" href="https://scienceisjo.github.io/minerallab/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">조암 광물의 색·굳기·염산 반응·자성을 가상 실험으로 확인하고 분류하는 실험실 앱.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>조암 광물 카드 학습(석영·장석·흑운모·각섬석·감람석·방해석·자철석 등)</li><li>색(밝음/어두움)·굳기·염산 반응 기준 드래그 분류</li><li>굳기 긁기 비교·염산 거품·자성 관찰 가상실험</li><li>미션형 퀴즈(색 분류 마스터·굳기 비교왕) + 업적</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">실물 표본 없이도 광물 구별 탐구가 가능해요. 실물 관찰 전 예습 또는 형성평가로.</p>
+    <div class="h4">📌 참고</div><p class="note">효과음 있음 · 다크 테마 모바일 UI</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🌋</span><div class="app-tit"><h3>화성암의 여행 (화성암 탐험대)</h3><div class="url">scienceisjo.github.io/scienceworld/igneousrocks</div></div><a class="applink" href="https://scienceisjo.github.io/scienceworld/igneousrocks" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">냉각 위치·색·알갱이 크기 기준으로 화성암을 분류하는 드래그 퍼즐+스토리 게임.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>분류 기준 질문에 따라 암석을 그리드에 드래그해 배치</li><li>현무암·유문암·화강암·반려암 4종(화산암=빨리 식음/심성암=천천히 식음)</li><li>냉각 환경 스토리 탐험</li><li>내 광물 카드 만들기: 사진 찍어 나만의 암석 카드 제작·PDF 저장</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">화산암/심성암 분류 개념을 퍼즐로 익히고, 카드 메이커로 실물 관찰 결과물을 만들게 해요.</p>
+    <div class="h4">📌 참고</div><p class="note">안산암·섬록암은 미포함(4종 구성) · 로그인 없음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🏜️</span><div class="app-tit"><h3>퇴적암의 여행</h3><div class="url">scienceisjo.github.io/sedimentaryrock-adventure/</div></div><a class="applink" href="https://scienceisjo.github.io/sedimentaryrock-adventure/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">퇴적암이 만들어지는 전 과정을 단계별 미니게임으로 체험하는 '돌멩이 키우기' 육성 게임.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>바위 부수기(풍화·침식)→퇴적물 쌓기(테트리스식, 알갱이 크기 순서)</li><li>다짐·교결 과정 애니메이션</li><li>역암·사암·이암 생성 + 석회암 보너스 미션</li><li>퇴적암 도감 + 마무리 퀴즈 8문제</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">퇴적→다짐→교결 과정을 손으로 조작하며 익히는 도입·정리용. 퀴즈는 형성평가로.</p>
+    <div class="h4">📌 참고</div><p class="note">모바일 최적화 · 로그인·저장 없음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🍞</span><div class="app-tit"><h3>변성암 베이커리</h3><div class="url">scienceisjo.github.io/metamorphic-rock/</div></div><a class="applink" href="https://scienceisjo.github.io/metamorphic-rock/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">원래 암석을 '지구의 오븐'에 넣고 열·압력을 가해 변성암을 굽는 제조 시뮬레이션+로봇 대결 게임.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>원래 암석 선택→오븐에 드래그→열·압력 조작으로 변성 게이지 채우기</li><li>셰일→편암/편마암, 사암→규암, 석회암→대리암(엽리 방향 반영)</li><li>로봇 암석사와 스피드 대결(콤보 점수)</li><li>'변성암 마스터' 자격증 발급·저장</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">열·압력에 따른 변성과 엽리 개념을 조작 게임으로. 자격증은 활동 인증으로 활용.</p>
+    <div class="h4">📌 참고</div><p class="note">가볍고 빠름 · 세로 화면 UI</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🧭</span><div class="app-tit"><h3>암석 분류 알고리즘</h3><div class="url">scienceisjo.github.io/rock-classification/</div></div><a class="applink" href="https://scienceisjo.github.io/rock-classification/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">카드를 드래그해 화성암·퇴적암·변성암을 가르는 분류 알고리즘(플로우차트)을 직접 완성하는 사고력 게임.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>조건/분류 카드를 점선 슬롯에 드래그해 알고리즘 완성</li><li>엽리·층리·결정 크기 등 관찰 기준으로 분기</li><li>난이도 3단계(쉬움/어려움/지옥)</li><li>암석 11종 통합(화성·퇴적·변성 전체)</li><li>업적 카드 만들기(이름·이모지 넣어 캡처 저장)</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">세 암석군을 통합 정리하는 단원 마무리·심화 활동. 알고리즘적 사고 훈련에도 좋아요.</p>
+    <div class="h4">📌 참고</div><p class="note">효과음 있음 · 모바일 지원</p>
+  </article>
+</section>
+
+<!-- ================= 빛과 파동 ================= -->
+<section class="section" id="u3" style="--accent:#3a6fd8">
+  <div class="sec-head"><span class="chip" style="background:#7ec8ff"></span><h2>중2과학 ③ 빛과 파동</h2><span class="cnt">12개</span></div>
+  <p class="sec-desc">교과서 3단원. 차시별 수업 페이지 7개 + 시뮬레이터 갤러리 + 소리·거울 체험 도구 3종. 모든 차시 페이지에 <b>교사용 수업 매뉴얼 탭</b>이 내장돼 있어요.</p>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🌈</span><div class="app-tit"><h3>빛과 파동 허브페이지</h3><div class="url">scienceisjo.github.io/lightandwave/hubpage</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/hubpage" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">빛 5차시·파동 2차시·도구상자로 진입하는 단원 관문 페이지. 단원 도입 때 이 링크 하나만 학생에게 공유하면 됩니다.</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">👀</span><div class="app-tit"><h3>[빛 1차시] 물체를 보는 과정</h3><div class="url">scienceisjo.github.io/lightandwave/01.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/01.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">빛의 반사·굴절을 시뮬+게임+퀴즈로 익히는 11개 탭 종합 학습 페이지.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>'빛 쏘기' 반사·굴절 관찰 실험실(각도 기록)</li><li>물총고기 굴절 게임·레이저 미로(레벨 잠금 해제)</li><li>Light Soccer·Light 포켓볼(반사각 적용 게임)</li><li>입사각=반사각 규칙 퀴즈+용어칩 사전(법선·굴절률)</li><li>메달 업적 시스템 + 교사용 수업 매뉴얼 탭</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">반사·굴절 법칙을 탐구한 뒤 게임으로 각도 개념을 반복 적용하게 해요.</p>
+    <div class="h4">📌 참고</div><p class="note">진행·메달 자동 저장 · 효과음 · 모바일 지원</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🪞</span><div class="app-tit"><h3>[빛 2차시] 평면 거울에서 상이 생기는 원리</h3><div class="url">scienceisjo.github.io/lightandwave/02.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/02.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">평면거울 상의 특징·작도 원리를 사진 실험과 작도 퀴즈로 다루는 10개 탭 페이지.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>상 특징 실험실(거리·크기 규칙 퀴즈)</li><li>빛 경로 추적 작도 '반사점을 찾아라'(랜덤 새 문제)</li><li>사진 업로드 '사진 속 나 vs 거울 속 나'(폰 카메라 연동)</li><li>거울 검수관 게임 + 스토리 스텝</li><li>학생 질문 등록 게시판 + 교사 매뉴얼 탭</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">자기 사진으로 좌우반전을 직접 확인하고 작도로 원리를 정리하게 해요.</p>
+    <div class="h4">📌 참고</div><p class="note">진행 자동 저장 · 효과음 · 모바일 지원</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🚗</span><div class="app-tit"><h3>[빛 3차시] 생활 속 거울과 렌즈</h3><div class="url">scienceisjo.github.io/lightandwave/03.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/03.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">평면·볼록·오목거울과 볼록·오목렌즈를 모드 전환하며 생활 사례로 분류하는 7개 탭 페이지.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>거울 3종·렌즈 2종 관찰소(시야와 보이는 모습 비교 시뮬)</li><li>용어칩 사전(시야·루페·근시 등)</li><li>생활 물체 분류 탐구(평면/볼록/오목 판정)</li><li>정리 퀴즈 + 질문 등록 게시판</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">종류별 특징을 비교 관찰한 뒤 생활 속 사례를 직접 분류하게 해요.</p>
+    <div class="h4">📌 참고</div><p class="note">가장 가볍고 빠른 차시 페이지 · 효과음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">📷</span><div class="app-tit"><h3>[빛 4차시] 거울과 렌즈에 의한 상</h3><div class="url">scienceisjo.github.io/lightandwave/04.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/04.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">5종 광학소자의 상 형성을 2D 광선도↔3D 관찰로 예측하는 시뮬 집약 10개 탭 페이지(시뮬 최다).</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>오목·볼록거울/평면/볼록·오목렌즈 상 예측 시뮬(2D 광선도↔3D 관찰 전환)</li><li>광선 작도로 상 위치 추적</li><li>광학 수사대 게임(정체 밝히기)</li><li>근시·원시 안경 교정 시뮬</li><li>물에 비친 구름·꺾인 연필(교과서 밖 확장) + 교사 매뉴얼</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">물체 거리에 따른 상의 종류·크기·방향 변화를 예측→검증하게 하고, 눈·안경까지 확장해요.</p>
+    <div class="h4">📌 참고</div><p class="note">파일이 커서 첫 로딩 잠깐 걸림 · 진행 자동 저장 · 효과음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🍎</span><div class="app-tit"><h3>[빛 5차시] 물체의 색과 빛의 합성</h3><div class="url">scienceisjo.github.io/lightandwave/05.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/05.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">빛의 합성·물체의 색·색 착시를 RGB 시뮬과 픽셀아트 송출로 다루는 3부 구성 페이지.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>RGB 색광 합성 시뮬(8색 버튼, 모으기/나란히 전환)</li><li>물체의 색 시뮬(색종이×조명색 조합으로 반사·흡수 확인)</li><li>색 착시 실험 4종</li><li>픽셀아트 송출(그리드에 그림 그려 화면 송출)+이미지 색 스캔</li><li>'색을 찾아라' 점수 퀴즈 + 교사 매뉴얼</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">삼원색 합성과 '물체의 색=반사한 빛' 원리를 조작 실험으로 이해하게 해요.</p>
+    <div class="h4">📌 참고</div><p class="note">진행 자동 저장 · 효과음 · 동영상 패널 포함</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🌊</span><div class="app-tit"><h3>[파동 1차시] 퍼져 나가는 파동</h3><div class="url">scienceisjo.github.io/lightandwave/wave01.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/wave01.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">파동의 정의와 구성요소를 시뮬·측정 미션·게임으로 배우는 7개 탭 스케치북 테마 페이지.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>매질은 제자리, 모양만 이동하는 파동 시뮬</li><li>용수철 파동(진폭·파장·속도 슬라이더)</li><li>파동 해부도(마루·골·파장·진폭 라벨)</li><li>파장 측정 미션(드래그로 재고 자동 채점)</li><li>사자·호랑이 울음 파형 비교(실제 소리 재생)+열쇠 수집 게임</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">'파동은 물질이 아니라 모양의 이동'이라는 핵심을 시뮬로 도입해요. 스피커만 있으면 됩니다.</p>
+    <div class="h4">📌 참고</div><p class="note">진행 자동 저장 · 마이크 불필요 · 심화 탭 포함</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🔊</span><div class="app-tit"><h3>[파동 2차시] 파동으로 알아보는 소리의 특성</h3><div class="url">scienceisjo.github.io/lightandwave/wave02.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/wave02.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">게임보이 테마 오실로스코프로 소리의 3요소를 직접 조작·청취하는 학습 페이지.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>실시간 오실로스코프(진폭·진동수 슬라이더+파형 4종 선택, 소리 동시 재생)</li><li>피아노·바이올린 음색 비교(같은 음 다른 파형)</li><li>두 파동 나란히 비교+파장-진동수 관계 시뮬</li><li>크레셴도 파형 예측(POE)+파형 맞추기 게임(일치도 채점)</li><li>배음 시뮬레이터·귀 구조 그림</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">세기=진폭, 높낮이=진동수, 음색=파형을 조작하며 귀로 확인하게 해요. 스피커 필요.</p>
+    <div class="h4">📌 참고</div><p class="note">마이크 불필요(합성음) · 진행 자동 저장</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🔬</span><div class="app-tit"><h3>시뮬레이터 모음 (82개)</h3><div class="url">scienceisjo.github.io/lightandwave/simulators.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/simulators.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">7개 차시의 시뮬레이터 82개를 딥링크로 모은 갤러리. 카드를 누르면 해당 차시의 그 시뮬 위치로 바로 이동해요.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>차시별 섹션(빛01: 11개 / 빛02: 17개 / 빛03: 3개 / 빛04: 16개 / 빛05: 19개 / 파동1: 6개 / 파동2: 10개)</li><li>카드 클릭 시 원본 페이지의 해당 시뮬로 딥링크(새 탭)</li><li>상단 차시 내비게이션 + 필터</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">수업 중 필요한 시뮬 하나만 골라 전자칠판에 띄우거나, 과제로 특정 시뮬 링크만 공유할 때.</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🔴</span><div class="app-tit"><h3>소리 도감 (통합)</h3><div class="url">scienceisjo.github.io/lightandwave/sound-pokedex.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/sound-pokedex.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">마이크로 목소리를 실시간 분석·'포획'하는 포켓몬 도감 컨셉 소리 탐구 앱.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>실시간 파형·스펙트럼 분석(마이크 입력)</li><li>실시간 음정(진동수) 검출·표시</li><li>강세·억양 탭: 문장을 읽으면 피치 곡선 시각화</li><li>모창 탭(기준음 따라하기) + 고음/저음 배틀 게임</li><li>분석한 소리를 도감에 수집</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">학생이 직접 목소리로 진동수·파형·강세를 관찰해요. 개인 폰+이어폰 활동에 최적.</p>
+    <div class="h4">📌 참고</div><p class="note"><b>마이크 권한 필수</b> · 시끄러운 교실에선 오차 가능</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🎹</span><div class="app-tit"><h3>절대음감 테스트</h3><div class="url">scienceisjo.github.io/lightandwave/pitch-test.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/pitch-test.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">음의 높낮이와 진동수(Hz)를 연결해 훈련하는 4모드 청음 게임(합성음 재생).</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>모드 4종: 연습/절대음감/두 음 비교/진동수 맞히기</li><li>악기 음색 선택(피아노·기타·베이스·순음)으로 음색 차이도 체험</li><li>A4=440Hz 기준 음이름↔진동수 표시</li><li>점수·레벨 기록</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">'높은 음=큰 진동수'를 청음 게임으로 체화. 수업 도입 아이스브레이킹으로도 좋아요.</p>
+    <div class="h4">📌 참고</div><p class="note">스피커/이어폰 필요 · 마이크 불필요</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🪞</span><div class="app-tit"><h3>좌우반전 챌린지</h3><div class="url">scienceisjo.github.io/lightandwave/flipchallenge.html</div></div><a class="applink" href="https://scienceisjo.github.io/lightandwave/flipchallenge.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">웹캠으로 얼굴을 찍어 좌우 대칭·반전을 실험하는 평면거울 연계 챌린지 앱.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>원본 vs 좌우반전 나란히 비교</li><li>얼굴 반쪽을 거울 복사한 '완벽 대칭' 합성+대칭 점수</li><li>실시간 반전 영상 '거울춤' 모드</li><li>결과 이미지 저장(전/후면 카메라 전환)</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">평면거울의 좌우반전을 자기 얼굴로 체험하는 2차시 연계 활동.</p>
+    <div class="h4">📌 참고</div><p class="note"><b>카메라 권한 필수</b> · 얼굴 촬영이므로 초상권 지도 필요</p>
+  </article>
+</section>
+
+<!-- ================= 물질의 구성 ================= -->
+<section class="section" id="u4" style="--accent:#7b4fd8">
+  <div class="sec-head"><span class="chip" style="background:#a78bfa"></span><h2>중2과학 ④ 물질의 구성</h2><span class="cnt">7개 + 준비 중 1</span></div>
+  <p class="sec-desc">교과서 4단원. 원소(전기분해) → 주기율표 → 원자 → 분자·입자 → 이온 차시 순서예요.</p>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">💧</span><div class="app-tit"><h3>물의 전기분해로 알아보는 원소와 화합물</h3><div class="url">scienceisjo.github.io/element_compound/</div></div><a class="applink" href="https://scienceisjo.github.io/element_compound/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">물의 전기분해 실험을 7단계로 따라가며 원소·화합물·원자 개념을 추리·정리하는 스텝형 학습 앱.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>전기분해 장치+전원 스위치, 기체가 차오르는 시험관 애니메이션</li><li>불꽃·성냥을 드래그해 기체 확인(수소 폭발음·산소 점화)</li><li>단서 카드 퀴즈+원소·화합물 분류 드래그</li><li>레고 블록 모형으로 원소/화합물 구조 비유</li><li>빈칸 채우기 정리(단계 잠금 해제식 진행)</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">물이 '원소가 아니라 화합물'임을 실험 증거로 추론하게 하는 차시 도입~정리용.</p>
+    <div class="h4">📌 참고</div><p class="note">모바일·터치 드래그 지원 · 로그인 없음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🗺️</span><div class="app-tit"><h3>마법의 원소 지도 (시간을 달리는 화학자)</h3><div class="url">scienceisjo.github.io/periodictable/</div></div><a class="applink" href="https://scienceisjo.github.io/periodictable/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">주기율표의 역사를 10단계 스토리로 탐험하는 픽셀 게임풍 학습 앱.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>스테이지 진행(원소의 탄생→멘델레예프 퍼즐→예언→적중→모즐리→실전)</li><li>원소 카드 드래그로 주기율표 배치 퍼즐</li><li>UV 라이트·X선 스캐너 커서로 숨은 단서 찾기</li><li>주기율표 셀 클릭·확대·메모(이미지 첨부)</li><li>완성 주기율표 이미지 저장(제출용)</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">멘델레예프의 예언→모즐리의 원자번호로 이어지는 역사와 족·주기 규칙을 스토리로 탐구. 결과 이미지는 평가 자료로.</p>
+    <div class="h4">📌 참고</div><p class="note">이름 입력 게이트 있음(로컬 처리) · PC 화면 권장</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">⚛️</span><div class="app-tit"><h3>원자 제작소</h3><div class="url">scienceisjo.github.io/atomicnumber/</div></div><a class="applink" href="https://scienceisjo.github.io/atomicnumber/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">양성자·중성자·전자를 직접 조립해 원자를 만들고 주기율표 족까지 연결하는 3탭 우주 테마 시뮬레이터.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>입자를 핵으로 드래그해 원자 조립(질량수 게이지·전하 균형 바늘)</li><li>안정/불안정 판정+원소기호·원자번호 자동 표시, 미션 모드</li><li>세로줄(족) 연구소: 속성 카드 분류+1족·18족 하이라이트</li><li>최외각 전자 탭: 원소 카드 공개+비활성 기체 실험</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">원자번호=양성자 수, 전하 중성 개념을 조립 활동으로 익히고 족(최외각 전자)으로 확장해요.</p>
+    <div class="h4">📌 참고</div><p class="note">모바일 반응형 · 효과음 · 로그인 없음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🧪</span><div class="app-tit"><h3>주기율표 분류 탐구 <span class="todo-badge">준비 중</span></h3></div></div>
+    <p class="what">원소를 줄 세우면 보이는 규칙을 분류 활동으로 탐구하는 앱. 지금 열심히 만들고 있어요!</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🍽️</span><div class="app-tit"><h3>입자 레스토랑</h3><div class="url">scienceisjo.github.io/particlerestaurant/</div></div><a class="applink" href="https://scienceisjo.github.io/particlerestaurant/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">대기·바다·분자·이온·소금 결정까지 입자 개념 전체를 7개 탭으로 다루는 종합 시뮬레이션 앱.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>대기·바다 입자 시뮬(클릭하면 성분 말풍선)</li><li>원자 꼬치: H·O·C·N·S를 꼬치에 끼워 분자 조립(분자명 자동 판정)</li><li>이온 제작소: '전자 지갑'으로 전자를 주고받아 양·음이온 생성</li><li>NaCl 결정 격자 미션+전자껍질 모형 카드</li><li>4지선다 마무리 퀴즈</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">원소·원자·분자·이온·이온결합을 하나의 앱에서 통합 정리하는 단원 마무리·복습용.</p>
+    <div class="h4">📌 참고</div><p class="note">모바일 지원 · 성취기준 배지 표시 · 로그인 없음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">⭐</span><div class="app-tit"><h3>이온을 별의 커비로 이해하기</h3><div class="url">scienceisjo.github.io/ionicmovement/ionkerby</div></div><a class="applink" href="https://scienceisjo.github.io/ionicmovement/ionkerby" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">에너지건으로 전자를 쏘고(양이온) 커비가 전자를 먹는(음이온) 아케이드 컨셉 이온 형성 체험 앱.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>양성자 수 선택→원소기호·족/주기·전자배치 자동 표시</li><li>에너지건으로 전자 제거=양이온, 커비로 흡수=음이온(화학식 실시간 표시)</li><li>이온 모형 퀴즈(점수판)</li><li>이온 형성 원리 정리 표+라이트/다크 모드</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">'전자를 잃으면 +, 얻으면 −'를 게임 메타포로 직관적으로 잡아주는 이온 도입 활동.</p>
+    <div class="h4">📌 참고</div><p class="note">네온 아케이드 테마 · 로그인 없음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🔋</span><div class="app-tit"><h3>이온의 이동 확인하기 (시뮬레이션)</h3><div class="url">scienceisjo.github.io/ionicmovement/</div></div><a class="applink" href="https://scienceisjo.github.io/ionicmovement/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">거름종이 위 전기장에서 색깔 이온이 극으로 이동하는 과정을 실시간 입자로 보여주는 시뮬레이션.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>시료 선택: 황산구리Ⅱ(파랑)·과망가니즈산칼륨(보라)·둘 다</li><li>전해질 선택(질산칼륨/염화나트륨/없음)+전압 슬라이더+극 바꾸기</li><li>Cu²⁺는 (−)극, MnO₄⁻는 (+)극으로 이동하는 입자 시뮬(전해질 없으면 경고)</li><li>원리 설명 탭+서술형 3문항(키워드 채점)</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">변인(시료·전해질·전압·극성)을 바꿔가며 이온 이동을 관찰·설명하게 하는 실험 대체/보조 시뮬.</p>
+    <div class="h4">📌 참고</div><p class="note">PC 가로 화면 권장 · 효과음</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🧫</span><div class="app-tit"><h3>이온의 이동 확인하기 (실험)</h3><div class="url">scienceisjo.github.io/ioncharge/</div></div><a class="applink" href="https://scienceisjo.github.io/ioncharge/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">실제 이온 이동 실험을 안전점검부터 보고서까지 12단계로 진행·기록하는 실험 관리 워크시트.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>12단계 잠금 해제식(안전점검→준비물→역할분담→실험과정→타이머→결과정리→보고서)</li><li>모둠 역할 분담 카드+실험 타이머</li><li>결과 사진 업로드+결과표+서술형 기록</li><li>보고서 PDF 생성·인쇄(학번/이름 자동 반영)</li><li>시뮬레이션 앱과 연동 배너</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">실제 실험 차시를 이 앱 하나로 운영하고, 완성 보고서를 PDF로 제출받아 평가에 활용해요.</p>
+    <div class="h4">📌 참고</div><p class="note">입력 내용 자동 저장(기기에만) · PC 화면 권장</p>
+  </article>
+</section>
+
+<!-- ================= 추리 ================= -->
+<section class="section" id="mystery">
+  <div class="sec-head"><span class="chip" style="background:#31456e"></span><h2>🔎 추리로 배우는 과학</h2><span class="cnt">2개</span></div>
+  <p class="sec-desc">추리·수사 콘셉트로 과학 개념을 익히는 몰입형 콘텐츠예요.</p>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🏛️</span><div class="app-tit"><h3>CSI 수사대 — 로마의 사라진 보석을 찾아라</h3><div class="url">scienceisjo.github.io/portfolio/csi-rome</div></div><a class="applink" href="https://scienceisjo.github.io/portfolio/csi-rome" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">고대 로마 배경의 스토리형 과학수사 추리 게임 — 단서를 모아 용의자 4인 중 범인을 지목해요.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>과학 수사 미션 4종: 루미놀 혈흔 감식·광변색·봉인된 문·빛의 신전</li><li>단서노트에 증거 누적→모두 모아야 '범인 지목' 잠금 해제</li><li>나만의 수사관 캐릭터 만들기</li><li>명예의 전당(기록 경쟁)·사운드 토글</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">과학 개념을 스토리에 녹인 몰입형 활동. 전자칠판 전체 진행 또는 개인 태블릿 자율 진행, 미션을 차시별로 나눠도 좋아요.</p>
+    <div class="h4">📌 참고</div><p class="note">전자칠판·모바일 대응 · 이미지가 많아 첫 로딩 잠깐 걸림</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🕵️</span><div class="app-tit"><h3>물질 추리 탐정</h3><div class="url">scienceisjo.github.io/propertiesofmatter/mattersnoop.html</div></div><a class="applink" href="https://scienceisjo.github.io/propertiesofmatter/mattersnoop.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">실험 데이터를 해석해 '진짜 물질'을 감별하는 물질의 특성 추리 게임.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>3종 실험: 밀도 측정(질량·부피)·가열해서 녹는점 찾기·용해도 곡선 읽기</li><li>단서노트+수집한 물질 도감</li><li>수사 지도·사건 의뢰실로 이어지는 챕터 스토리</li><li>탐정 캐릭터 등록</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">밀도·녹는점·용해도를 배운 뒤 개념 적용 활동으로. 데이터 해석 연습에 특히 좋아요.</p>
+    <div class="h4">📌 참고</div><p class="note">모바일 지원 · 미디어가 많아 첫 로딩 잠깐 걸림</p>
+  </article>
+</section>
+
+<!-- ================= 게임 ================= -->
+<section class="section" id="game">
+  <div class="sec-head"><span class="chip" style="background:#c2452f"></span><h2>🎮 게임으로 배우는 과학</h2><span class="cnt">3개</span></div>
+  <p class="sec-desc">교실 분위기를 살리는 게임형 콘텐츠. 전자칠판·TV에 띄워 다 함께 즐겨 보세요.</p>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">⚡</span><div class="app-tit"><h3>교실을 깨우자 — CLASS GAME WORLD</h3><div class="url">scienceisjo.github.io/brain-break-lab/</div></div><a class="applink" href="https://scienceisjo.github.io/brain-break-lab/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">수업 전환·집중 환기를 위한 범용 학급 미니게임 플랫폼(마인크래프트 교실 테마).</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>내장 미니게임 15종: 고슴+더지 잡기·반응 줄다리기·컬러단어 매칭·신경 반응속도·순간 기억·인간 계산기·다이아 러시·정확히 멈춰·참아(Go/No-Go)·다른 것 찾기·몸으로 글자(카메라)·방향 맞추기·사과게임·헬리콥터·공 튕기기</li><li>🥁 드럼 연습실(음색 설정·녹음·루프)</li><li>한 화면에서 1~6명 동시 멀티터치 대결</li><li>명예의 전당(전국 통합/우리 교실)·패치노트</li><li>라이어 게임·5초 준다 게임으로 연결 카드</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">수업 시작 전·활동 전환 시 3~5분 브레인 브레이크로. 전자칠판 멀티터치 대결이 백미예요.</p>
+    <div class="h4">📌 참고</div><p class="note">전자칠판 최적화 · 일부 게임은 카메라 사용 · 교과 무관 범용</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🤥</span><div class="app-tit"><h3>라이어 게임</h3><div class="url">scienceisjo.github.io/liargame_/</div></div><a class="applink" href="https://scienceisjo.github.io/liargame_/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">기기 하나를 돌려보며 라이어를 찾아내는 대면 정체 추리 게임(과학 제시어판).</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>제시어 40종·7카테고리(지구계·지구 내부·광물·화성암·퇴적암·변성암·암석 순환)</li><li>카드 확인→토론 타이머→지목 투표→정체 공개 라운드 흐름</li><li>라이어의 역전 방어: 제시어를 맞히면 역전승(+점수 규칙 내장)</li><li>'바보 라이어' 모드(비슷한 제시어로 난이도 상승)·인원수 자유</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">지권의 변화 단원 마무리 개념 확인을 모둠 대면 활동으로. 폰 1대만 있으면 됩니다.</p>
+    <div class="h4">📌 참고</div><p class="note">모바일 세로 화면 최적화 · 지구과학 제시어 중심</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">⏱️</span><div class="app-tit"><h3>Only 5 Seconds</h3><div class="url">scienceisjo.github.io/only5seconds/</div></div><a class="applink" href="https://scienceisjo.github.io/only5seconds/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">스마트폰을 돌려가며 5초 안에 답하는 순발력 퀴즈(과학+상식 혼합, 다인 점수제).</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>문제 116개: 화학(물질)·지구과학·일반 상식</li><li>모드 3종: '이건 뭘까?'(설명→정답)·'설명해 봐!'·듀얼(랜덤)</li><li>5초 부저 타이머(5초 내 정답 2점/초과 1점) 스코어보드</li><li>룰렛 파워업(시간 연장·첫 글자 힌트 등 등급별 보상)</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">개념 복습+브레인 브레이크 겸용 모둠 대결. 쉬는 시간 직전 5분 활동으로도 좋아요.</p>
+    <div class="h4">📌 참고</div><p class="note">모바일 세로 최적화 · 부저 소리 있음</p>
+  </article>
+</section>
+
+<!-- ================= 만들기 ================= -->
+<section class="section" id="maker">
+  <div class="sec-head"><span class="chip" style="background:#2e7d6f"></span><h2>🔨 만들며 배우는 과학</h2><span class="cnt">3개</span></div>
+  <p class="sec-desc">손으로 직접 만들며 원리를 배우는 체험 활동이에요.</p>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🌈</span><div class="app-tit"><h3>플로팅 홀로그램 만들기</h3><div class="url">scienceisjo.github.io/hologram/new.html</div></div><a class="applink" href="https://scienceisjo.github.io/hologram/new.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">홀로그램 원리 학습부터 4면 영상 제작·관람·탐구보고서 인쇄까지 한 페이지로 진행하는 활동형 워크북.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>3D 그래픽으로 반사 원리 시각화</li><li>바이브코딩 모드: 아이디어만 넣으면 4면 영상용 AI 프롬프트 자동 생성·복사</li><li>미디어 업로드 모드: 사진·영상을 넣으면 4면(0°/90°/180°/270°) 자동 배치</li><li>4면 결과물 PNG 저장·크기/간격 조절·전체화면 관람</li><li>탐구보고서 폼(원리·느낀점·AI 성찰) 작성 후 인쇄</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">투명 피라미드 공작+웹앱 관람을 결합한 메이커 수업. 보고서 인쇄로 산출물까지 마무리돼요.</p>
+    <div class="h4">📌 참고</div><p class="note">입력 내용 자동 저장 · 모바일 지원</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🌊</span><div class="app-tit"><h3>나만의 간이 염분계 만들기</h3><div class="url">scienceisjo.github.io/portfolio/Salinitytester.html</div></div><a class="applink" href="https://scienceisjo.github.io/portfolio/Salinitytester.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">스포이드+쇠구슬 간이 염분계를 만들어 부력으로 소금물 농도를 재는 9단계 탐구 워크북.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>9단계: 모둠 등록→제작 가이드→측정법→시뮬레이터→용액 제조→측정&amp;그래프→모둠 미션→바이브 코딩→마무리</li><li>부력·밀도 원리 인터랙티브 시뮬레이터</li><li>측정값 입력→평균·그래프 자동 처리</li><li>난이도별(하/중/상) AI 프롬프트로 디지털 보정 도구 제작 확장</li><li>결과 인쇄·저장</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">도구 제작→측정→데이터 처리→AI 코딩 확장까지 이어지는 메이커 탐구 수업에 그대로 투입.</p>
+    <div class="h4">📌 참고</div><p class="note">입력 자동 저장 · 모바일 지원 · 인쇄 지원</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🧭</span><div class="app-tit"><h3>[영재수업] 간이 염분계 보정 탐구</h3><div class="url">scienceisjo.github.io/gifted-science/salinity-main.html</div></div><a class="applink" href="https://scienceisjo.github.io/gifted-science/salinity-main.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">굴절 염분계(기준)와 직접 만든 간이 염분계를 비교해 보정관계를 만들고 미지 소금물을 추정하는 영재반 심화 탐구.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>모둠 등록(이름·인원 2~6명) 후 '항해 지도'를 따라 11단계 진행</li><li>보정(교정) 개념+30초 교정 체험 게임</li><li>굴절(스넬)·부력(계란 띄우기) 인터랙티브 시뮬</li><li>기준 용액 4종 측정→보정 그래프 작성→미지 시료 추정</li><li>선택 바이브코딩+탐구 보고서 자동 생성</li></ul>
+    <div class="h4">🧑‍🏫 수업 활용</div><p class="use">'기준 도구와 비교해 내 도구의 눈금에 의미를 부여한다'는 교정 개념을 다루는 2~3차시 영재 블록 수업용.</p>
+    <div class="h4">📌 참고</div><p class="note">모둠 정보 자동 저장 · 실물 준비물(굴절계·스포이드·쇠구슬) 필요</p>
+  </article>
+</section>
+
+<!-- ================= 도구 ================= -->
+<section class="section" id="tools">
+  <div class="sec-head"><span class="chip" style="background:#5b5f66"></span><h2>🧰 개발한 도구들</h2><span class="cnt">3개 + 개발 중 1</span></div>
+  <p class="sec-desc">수업 준비에 바로 쓰는 교사용 도구예요. 설치·로그인·비용 없이 무제한으로 쓸 수 있어요.</p>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">📄</span><div class="app-tit"><h3>PDF 만능 도구</h3><div class="url">scienceisjo.github.io/pdf-tool/</div></div><a class="applink" href="https://scienceisjo.github.io/pdf-tool/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">설치·가입 없이 브라우저에서 돌아가는 올인원 PDF 처리 도구. 파일이 서버로 전송되지 않아요.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>병합·분할(범위 추출/가위/용량 기준)·압축(흑백 변환 포함)</li><li>이미지↔PDF 상호 변환·페이지 정리(썸네일 재배열)</li><li>쪽번호·한글 워터마크·모아찍기(2/4쪽·소책자)</li><li>텍스트 추출+OCR 글자 인식(한국어·영어, 스캔본도 OK)</li><li>라이브러리 전부 내장 → 인터넷 없이도 동작, 앱 설치(PWA) 가능</li></ul>
+    <div class="h4">🧑‍🏫 활용</div><p class="use">유인물 병합, 시험지 분할·워터마크, 스캔 자료 OCR 등 교무 문서 작업 일체. 개인정보 문서도 안심하고 처리하세요.</p>
+    <div class="h4">📌 참고</div><p class="note">완전 무료·무제한 · PC/폰 모두 설치 가능 · 설명서 내장</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">💌</span><div class="app-tit"><h3>편지 만들기</h3><div class="url">scienceisjo.github.io/lettermaker/</div></div><a class="applink" href="https://scienceisjo.github.io/lettermaker/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">상황별 편지지 템플릿을 골라 내용만 적어 A4 한 장으로 인쇄하는 편지 생성 도구.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>템플릿 4종: 🍀행운 편지(시험·발표 응원)·🎂생일 축하·💌감사 편지·🎗️기념일</li><li>좌측 편집+우측 실시간 미리보기, 메시지 카드 여러 개 추가</li><li>받는 이/보내는 이/본문/추신(P.S.) 입력</li><li>배경 이미지 업로드+손글씨 한글 폰트 6종</li><li>인쇄·저장 버튼으로 바로 출력</li></ul>
+    <div class="h4">🧑‍🏫 활용</div><p class="use">시험 응원 편지, 생일 축하, 학기말 감사 인사 등 학급 경영·상담에서 마음을 전할 때.</p>
+    <div class="h4">📌 참고</div><p class="note">인쇄 특화(A4) · 템플릿 계속 추가 예정</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">📝</span><div class="app-tit"><h3>학습지 디자인 툴 <span class="todo-badge">개발 중</span></h3></div></div>
+    <p class="what">40분 수업 운영 카드·학습지를 폼 입력만으로 디자인하는 도구. 현재 '변인 통제 수업 카드' 견본이 완성됐고, 편집 기능을 개발 중이에요.</p>
+  </article>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">🍎</span><div class="app-tit"><h3>해누리 질문 과수원</h3><div class="url">scienceisjo.github.io/questionuri/</div></div><a class="applink" href="https://scienceisjo.github.io/questionuri/" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">학생 질문을 '나무·열매'로 키우는 실시간 협력 질문 게시판(질문하는 교실 플랫폼).</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>질문 심기(나무 선택·태그·익명 가능)+꼬리질문(가지)+물주기(공감)</li><li>수업 참여 코드로 교사의 '오늘의 자료' 배포→자료 연결 질문 작성</li><li>교사 기능: 단원 보드·되묻기·수업 단계 전환·라이브 세션·성장 리포트</li><li>'좋은 질문 7가지 특성' 안내+질문 자가체크</li><li>수식(KaTeX) 입력 지원·라이트/다크 테마</li></ul>
+    <div class="h4">🧑‍🏫 활용</div><p class="use">질문 중심 수업 운영 플랫폼. 학생은 질문을 심고 키우고, 교사는 자료 배포와 되묻기로 사고를 확장시켜요.</p>
+    <div class="h4">📌 참고</div><p class="note">실시간 서버 연동(인터넷 필요) · 익명 질문 지원</p>
+  </article>
+</section>
+
+<!-- ================= 정보 ================= -->
+<section class="section" id="info">
+  <div class="sec-head"><span class="chip" style="background:#846c2f"></span><h2>📋 정보 &amp; 가이드</h2><span class="cnt">1개</span></div>
+
+  <article class="app">
+    <div class="app-top"><span class="app-icon">💻</span><div class="app-tit"><h3>바이브 코딩 결과물 배포하기</h3><div class="url">scienceisjo.github.io/githubmanual/forstudent.html</div></div><a class="applink" href="https://scienceisjo.github.io/githubmanual/forstudent.html" target="_blank" rel="noopener">열기 →</a></div>
+    <p class="what">AI로 만든 HTML을 GitHub Pages에 올려 링크로 공유하는 학생용 단계별 튜토리얼.</p>
+    <div class="h4">✨ 주요 기능</div>
+    <ul class="feat"><li>단계 탭: 가입→코드 확인→저장소 만들기→코드 올리기(복붙/업로드 2가지 방법)→Pages 설정→링크 확인</li><li>'안 될 때 🆘' 트러블슈팅(이중 확장자 함정·버튼 비활성 등 실전 예외)</li><li>모의 화면 칩으로 클릭 흐름 시각화</li></ul>
+    <div class="h4">🧑‍🏫 활용</div><p class="use">바이브코딩 수업 후 학생들이 스스로 배포하게 하는 자기주도 매뉴얼. 교사 호출 전 🆘 탭을 먼저 보게 하세요.</p>
+  </article>
+</section>
+
+<footer class="foot">
+  <p><b>과학 탐험 월드</b> · joo.is/과학탐구월드</p>
+  <p style="margin-top:6px;">해누리중학교 조승재(과학이조선생) · 📧 chuseonjae@outlook.kr · 📷 @science_is_jo</p>
+  <p style="margin-top:6px;">이 설명서는 각 웹앱의 실제 코드를 분석해 작성했습니다. 자유롭게 수업에 활용하세요. (비상업적 교육 목적)</p>
+</footer>
+
+</div>
+<button class="toTop" id="toTop" aria-label="맨 위로">▲</button>
+<script>
+var t=document.getElementById('toTop');
+window.addEventListener('scroll',function(){t.style.display=window.scrollY>500?'block':'none';});
+t.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+</script>
+</body>
+</html>
